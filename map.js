@@ -39,6 +39,9 @@ cityData.forEach((city) => {
         Umweg: ${(city.Umweg / 1000).toFixed(2)} km`
     );
     circle.on("click", (e) => showRoutesFrom(city.name));
+    circle.on("popupclose", (e) => {
+        routeLayer.clearLayers();
+    });
     circle.addTo(map);
 });
 
