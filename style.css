@@ -18,3 +18,8 @@ h1 span {
     padding: 10px;
     border-radius: 10px;
 }
+
+.leaflet-tile-pane {
+  -webkit-filter: grayscale(75%);
+  filter: grayscale(75%);
+}

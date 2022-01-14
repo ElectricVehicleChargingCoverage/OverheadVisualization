@@ -28,6 +28,7 @@ cityData.forEach((city) => {
     const circle = L.circle([city.lat, city.long], {
         radius,
         color: "#ff0000",
+        stroke: false
     });
     circle.bindPopup(
         `<h2>${city.name}</h2>
