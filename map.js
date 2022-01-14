@@ -24,8 +24,8 @@ map.on("click", onMapClick);
 // Visualize cityData:
 
 cityData.forEach((city) => {
-    const radius = 100 * (city.Zeitfaktor - 1);
-    const circle = L.circleMarker([city.lat, city.long], {
+    const radius = 50000 * (city.Zeitfaktor - 1);
+    const circle = L.circle([city.lat, city.long], {
         radius,
         color: "#ff0000",
     });
