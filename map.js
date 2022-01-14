@@ -5,15 +5,25 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-const style = {
-    color: "#ff0000",
-};
-L.geoJSON(cityData, {
-    style: style,
-    pointToLayer: function (feature, latlng) {
-        console.log(feature);
-        return L.circleMarker(latlng, {
-            radius: 80 * (feature.properties.Zeitfaktor -1),
-        });
-    },
-}).addTo(map);
+cityData.forEach((city) => {
+    const radius = 100 * (city.Zeitfaktor - 1);
+    const circle = L.circleMarker([city.lat, city.long], {
+        radius,
+        color: "#ff0000",
+    });
+    circle.bindPopup(
+        `${city.name}: <br /> Zeitfaktor: ${city.Zeitfaktor} <br /> Zeitunterschied: ${city.Zeitunterschied} <br /> Distanzfaktor: ${city.Distanzfaktor} <br /> Umweg: ${city.Umweg}`
+    );
+    circle.addTo(map);
+});
+
+var popup = L.popup();
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("Here is " + e.latlng.toString())
+        .openOn(map);
+}
+
+map.on("click", onMapClick);
