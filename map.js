@@ -1,4 +1,5 @@
 var map = L.map("map").setView([51.163361, 10.447683], 7);
+var routeLayer = L.layerGroup().addTo(map);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
@@ -28,7 +29,7 @@ cityData.forEach((city) => {
     const circle = L.circle([city.lat, city.long], {
         radius,
         color: "#ff0000",
-        stroke: false
+        stroke: false,
     });
     circle.bindPopup(
         `<h2>${city.name}</h2>
@@ -37,6 +38,20 @@ cityData.forEach((city) => {
         Distanzfaktor: ${city.Distanzfaktor.toFixed(4)} <br />
         Umweg: ${(city.Umweg / 1000).toFixed(2)} km`
     );
-    circle.on("click", (e) => console.log(city.name));
+    circle.on("click", (e) => showRoutesFrom(city.name));
     circle.addTo(map);
 });
+
+function showRoutesFrom(startCity) {
+    const routes = routeData.filter((route) => route.Start == startCity);
+    routeLayer.clearLayers(); // Remove previously shown routes
+    routes.forEach((route) => {
+        const latlngs = [
+            [route["start_lat"], route["start_long"]],
+            [route["dest_lat"], route["dest_long"]],
+        ];
+        var polyline = L.polyline(latlngs, { color: "#83CFB2" }).addTo(
+            routeLayer
+        );
+    });
+}
