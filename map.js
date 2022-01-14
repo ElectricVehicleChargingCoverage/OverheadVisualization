@@ -16,8 +16,10 @@ var popup = L.popup();
 function onMapClick(e) {
     popup
         .setLatLng(e.latlng)
-        .setContent("Here is " + e.latlng.toString())
+        .setContent(`${e.latlng.lat.toFixed(5).toString()}, ${e.latlng.lng.toFixed(5).toString()}`)
         .openOn(map);
+    console.log(e.latlng);
+    routeLayer.clearLayers();
 }
 
 map.on("click", onMapClick);
@@ -39,9 +41,6 @@ cityData.forEach((city) => {
         Umweg: ${(city.Umweg / 1000).toFixed(2)} km`
     );
     circle.on("click", (e) => showRoutesFrom(city.name));
-    circle.on("popupclose", (e) => {
-        routeLayer.clearLayers();
-    });
     circle.addTo(map);
 });
 
