@@ -52,7 +52,7 @@ function showRoutesFrom(startCity) {
             [route["start_lat"], route["start_long"]],
             [route["dest_lat"], route["dest_long"]],
         ];
-        var polyline = L.polyline(latlngs, { color: "#83CFB2" });
+        var polyline = L.polyline(latlngs);
         polyline.bindPopup(
             `<h2> ${route.Start} -> ${route.Ziel}</h2>
         <table>
@@ -87,9 +87,9 @@ function showRoutesFrom(startCity) {
         <tr>
             <td>Ladezeit</td>
             <td>-</td>
-            <td>${toHHMMSS(route.Audiladezeit)}</td>
-            <td>${toHHMMSS(route.Peugeotladezeit)}</td>
-            <td>${toHHMMSS(route.Fiatladezeit)}</td>
+            <td>${route.Audiladezeit ? toHHMMSS(route.Audiladezeit) : "-"}</td>
+            <td>${route.Peugeotladezeit ? toHHMMSS(route.Peugeotladezeit) : "-"}</td>
+            <td>${route.Fiatladezeit ? toHHMMSS(route.Fiatladezeit) : "-"}</td>
         </tr>
         <tr>
             <td>Ladestops</td>

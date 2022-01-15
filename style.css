@@ -20,8 +20,8 @@ h1 span {
 }
 
 .leaflet-tile-pane {
-  -webkit-filter: grayscale(75%);
-  filter: grayscale(75%);
+  -webkit-filter: grayscale(55%);
+  filter: grayscale(55%);
 }
 
 table {
