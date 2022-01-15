@@ -16,9 +16,12 @@ var popup = L.popup();
 function onMapClick(e) {
     popup
         .setLatLng(e.latlng)
-        .setContent(`${e.latlng.lat.toFixed(5).toString()}, ${e.latlng.lng.toFixed(5).toString()}`)
+        .setContent(
+            `${e.latlng.lat.toFixed(5).toString()}, ${e.latlng.lng
+                .toFixed(5)
+                .toString()}`
+        )
         .openOn(map);
-    console.log(e.latlng);
     routeLayer.clearLayers();
 }
 
@@ -26,11 +29,14 @@ map.on("click", onMapClick);
 
 // Visualize cityData:
 
+const cityMinMax = analyzeAttribute(cityData, ["Zeitfaktor"]);
 cityData.forEach((city) => {
     const radius = 50000 * (city.Zeitfaktor - 1);
+    const color = getColor(cityMinMax, city["Zeitfaktor"]);
     const circle = L.circle([city.lat, city.long], {
         radius,
-        color: "#ff0000",
+        color,
+        fillOpacity: 0.4,
         stroke: false,
     });
     circle.bindPopup(
@@ -46,13 +52,16 @@ cityData.forEach((city) => {
 
 function showRoutesFrom(startCity) {
     const routes = routeData.filter((route) => route.Start == startCity);
+    getOverheadScores(routes);
     routeLayer.clearLayers(); // Remove previously shown routes
+    minmax = analyzeAttribute(routes, "timeoverhead");
     routes.forEach((route) => {
         const latlngs = [
             [route["start_lat"], route["start_long"]],
             [route["dest_lat"], route["dest_long"]],
         ];
-        var polyline = L.polyline(latlngs);
+        const color = getColor(minmax, route["timeoverhead"]);
+        var polyline = L.polyline(latlngs, { color, opacity: 0.75 });
         polyline.bindPopup(
             `<h2> ${route.Start} -> ${route.Ziel}</h2>
         <table>
@@ -88,7 +97,9 @@ function showRoutesFrom(startCity) {
             <td>Ladezeit</td>
             <td>-</td>
             <td>${route.Audiladezeit ? toHHMMSS(route.Audiladezeit) : "-"}</td>
-            <td>${route.Peugeotladezeit ? toHHMMSS(route.Peugeotladezeit) : "-"}</td>
+            <td>${
+                route.Peugeotladezeit ? toHHMMSS(route.Peugeotladezeit) : "-"
+            }</td>
             <td>${route.Fiatladezeit ? toHHMMSS(route.Fiatladezeit) : "-"}</td>
         </tr>
         <tr>

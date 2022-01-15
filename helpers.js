@@ -19,3 +19,31 @@ function analyzeAttribute(data, attribute) {
         max: Math.max.apply(null, reducedData),
     };
 }
+
+function getOverheadScores(routes) {
+    routes.forEach((route) => {
+        const timeoverhead =
+            (route.Audidauer + route.Peugeotdauer + route.Fiatdauer) /
+            (3 * route.Verbrennerdauer);
+        const umweg =
+            (route.Audistrecke + route.Peugeotstrecke + route.Fiatstrecke) /
+            (3 * route.Verbrennerstrecke);
+        route["timeoverhead"] = timeoverhead;
+        route["umweg"] = umweg;
+    });
+}
+
+function getColor(minmax, value) {
+    min = minmax.min;
+    max = minmax.max;
+    if (value <= min) {
+        return "rgb(0, 255, 0)";
+    } else if (value >= max) {
+        return "rgb(255, 0, 0)";
+    } else {
+        const v = (value - min) / (max - min);
+        const red = Math.round(v * 255);
+        const green = 255 - red;
+        return `rgb(${red}, ${green}, 0)`;
+    }
+}
