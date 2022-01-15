@@ -2,8 +2,9 @@ var map = L.map("map").setView([51.163361, 10.447683], 7);
 var routeLayer = L.layerGroup().addTo(map);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> <br />
+    <a href="https://github.com/ElectricVehicleChargingCoverage/OverheadVisualization"> GitHub </a><br />
+    Cities: ${cityData.length}, Routes: ${routeData.length}`,
 }).addTo(map);
 
 map.setMaxBounds([
@@ -31,7 +32,7 @@ map.on("click", onMapClick);
 
 const cityMinMax = analyzeAttribute(cityData, ["Zeitfaktor"]);
 cityData.forEach((city) => {
-    const radius = 50000 * (city.Zeitfaktor - 1);
+    const radius = 5000 * Math.pow(city.Zeitfaktor, 5) ;
     const color = getColor(cityMinMax, city["Zeitfaktor"]);
     const circle = L.circle([city.lat, city.long], {
         radius,
@@ -62,8 +63,9 @@ function showRoutesFrom(startCity) {
         ];
         const color = getColor(minmax, route["timeoverhead"]);
         var polyline = L.polyline(latlngs, { color, opacity: 0.75 });
+        polyline.bindTooltip(`${route["timeoverhead"].toFixed(3)}`);
         polyline.bindPopup(
-            `<h2> ${route.Start} -> ${route.Ziel}</h2>
+            `<h2> ${route.Start} -> ${route.Ziel} (Score: ${route["timeoverhead"].toFixed(3)})</h2>
         <table>
         <tr>
             <th> </th>
