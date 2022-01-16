@@ -62,7 +62,7 @@ function showRoutesFrom(startCity) {
             [route["dest_lat"], route["dest_long"]],
         ];
         const color = getColor(minmax, route["timeoverhead"]);
-        var polyline = L.polyline(latlngs, { color, opacity: 0.75 });
+        var polyline = L.polyline(latlngs, { color, opacity: 0.7 });
         polyline.bindTooltip(`${route["timeoverhead"].toFixed(3)}`);
         polyline.bindPopup(
             `<h2> ${route.Start} -> ${route.Ziel} (Score: ${route["timeoverhead"].toFixed(3)})</h2>
