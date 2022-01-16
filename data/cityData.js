@@ -1,227 +1,272 @@
 const cityData = [
     {
+        "name": "Aachen",
+        "lat": 50.7762,
+        "long": 6.0838,
+        "Zeitfaktor": 1.1839310910708531,
+        "Zeitunterschied": 3182.586956521739,
+        "Distanzfaktor": 1.0069789303599608,
+        "Umweg": 3368.217391304348
+    },
+    {
         "name": "Augsburg",
         "lat": 48.3717,
         "long": 10.8983,
-        "Zeitfaktor": 1.334736487174802,
-        "Zeitunterschied": 6097.20652173913,
-        "Distanzfaktor": 0.9835242728751826,
-        "Umweg": -8937.032608695652
+        "Zeitfaktor": 1.347212380248034,
+        "Zeitunterschied": 6528.49,
+        "Distanzfaktor": 0.9861579703720861,
+        "Umweg": -7438.64
     },
     {
         "name": "Berlin",
         "lat": 52.5167,
         "long": 13.3833,
-        "Zeitfaktor": 1.4253033519769691,
-        "Zeitunterschied": 7213.791666666667,
-        "Distanzfaktor": 1.0087189839734452,
-        "Umweg": 4052.3854166666665
+        "Zeitfaktor": 1.413144627988474,
+        "Zeitunterschied": 6865.5948275862065,
+        "Distanzfaktor": 1.0085228456254132,
+        "Umweg": 3915.8793103448274
     },
     {
         "name": "Bielefeld",
         "lat": 52.0167,
         "long": 8.5333,
-        "Zeitfaktor": 1.2350666564102812,
-        "Zeitunterschied": 2999.7083333333335,
-        "Distanzfaktor": 0.985689079927471,
-        "Umweg": -5486.0625
+        "Zeitfaktor": 1.2371084126548002,
+        "Zeitunterschied": 2956.0344827586205,
+        "Distanzfaktor": 0.9895808256288565,
+        "Umweg": -4122.827586206897
     },
     {
         "name": "Bochum",
         "lat": 51.4833,
         "long": 7.2167,
-        "Zeitfaktor": 1.1959449656518035,
-        "Zeitunterschied": 3093.1354166666665,
-        "Distanzfaktor": 1.0199388937426872,
-        "Umweg": 6110.385416666667
+        "Zeitfaktor": 1.1982140031172652,
+        "Zeitunterschied": 3113.1293103448274,
+        "Distanzfaktor": 1.0178405483228696,
+        "Umweg": 5850.198275862069
     },
     {
         "name": "Bonn",
         "lat": 50.7339,
         "long": 7.0997,
-        "Zeitfaktor": 1.173374632358186,
-        "Zeitunterschied": 2758.5,
-        "Distanzfaktor": 1.0144521672223357,
-        "Umweg": 4073.5208333333335
+        "Zeitfaktor": 1.177069673638431,
+        "Zeitunterschied": 2895.862068965517,
+        "Distanzfaktor": 1.013791938093988,
+        "Umweg": 4113.793103448276
+    },
+    {
+        "name": "Braunschweig",
+        "lat": 52.2692,
+        "long": 10.5211,
+        "Zeitfaktor": 1.3349180669062166,
+        "Zeitunterschied": 4071.603448275862,
+        "Distanzfaktor": 1.0065186462664935,
+        "Umweg": 1456.405172413793
     },
     {
         "name": "Bremen",
         "lat": 53.1153,
         "long": 8.7975,
-        "Zeitfaktor": 1.3080470433751878,
-        "Zeitunterschied": 4741.09375,
-        "Distanzfaktor": 0.9969142442156244,
-        "Umweg": -1433.1666666666667
+        "Zeitfaktor": 1.3012704675557472,
+        "Zeitunterschied": 4439.775862068966,
+        "Distanzfaktor": 0.9980589904950821,
+        "Umweg": -1165.3103448275863
+    },
+    {
+        "name": "Chemnitz",
+        "lat": 50.8333,
+        "long": 12.9167,
+        "Zeitfaktor": 1.4031291116852287,
+        "Zeitunterschied": 6152.401785714285,
+        "Distanzfaktor": 1.009953313383196,
+        "Umweg": 4924.151785714285
     },
     {
         "name": "Cologne",
         "lat": 50.9422,
         "long": 6.9578,
-        "Zeitfaktor": 1.1972752666929518,
-        "Zeitunterschied": 2959.6458333333335,
-        "Distanzfaktor": 1.012228847679778,
-        "Umweg": 2814.25
+        "Zeitfaktor": 1.2004053617895762,
+        "Zeitunterschied": 3080.0689655172414,
+        "Distanzfaktor": 1.0116984554940869,
+        "Umweg": 3000.939655172414
     },
     {
         "name": "Dortmund",
         "lat": 51.5139,
         "long": 7.4653,
-        "Zeitfaktor": 1.1829107325201607,
-        "Zeitunterschied": 2891.4105263157894,
-        "Distanzfaktor": 1.0108638810386275,
-        "Umweg": 3561.7473684210527
+        "Zeitfaktor": 1.1909368398271598,
+        "Zeitunterschied": 2967.1160714285716,
+        "Distanzfaktor": 1.0102386575339435,
+        "Umweg": 3514.3839285714284
     },
     {
         "name": "Dresden",
         "lat": 51.0493,
         "long": 13.7384,
-        "Zeitfaktor": 1.4398050503554998,
-        "Zeitunterschied": 7227.802083333333,
-        "Distanzfaktor": 1.010732540090307,
-        "Umweg": 5187.75
+        "Zeitfaktor": 1.422645967641065,
+        "Zeitunterschied": 7013.060344827586,
+        "Distanzfaktor": 1.0100850814434241,
+        "Umweg": 4811.293103448276
     },
     {
         "name": "Duisburg",
         "lat": 51.4322,
         "long": 6.7611,
-        "Zeitfaktor": 1.182740013394722,
-        "Zeitunterschied": 2969.5208333333335,
-        "Distanzfaktor": 1.0053066220223885,
-        "Umweg": 2340.6041666666665
+        "Zeitfaktor": 1.1844887385708542,
+        "Zeitunterschied": 3033.5258620689656,
+        "Distanzfaktor": 1.0057144363798434,
+        "Umweg": 2622.146551724138
     },
     {
         "name": "D\u00fcsseldorf",
         "lat": 51.2311,
         "long": 6.7724,
-        "Zeitfaktor": 1.1774839107819395,
-        "Zeitunterschied": 2886.9479166666665,
-        "Distanzfaktor": 1.001402780439556,
-        "Umweg": 1696.7291666666667
+        "Zeitfaktor": 1.1795218486311856,
+        "Zeitunterschied": 2974.543103448276,
+        "Distanzfaktor": 1.0017834280151792,
+        "Umweg": 1768.9827586206898
     },
     {
         "name": "Essen",
         "lat": 51.4508,
         "long": 7.0131,
-        "Zeitfaktor": 1.1704004123023255,
-        "Zeitunterschied": 2843.1770833333335,
-        "Distanzfaktor": 0.9931501254250404,
-        "Umweg": 877.71875
+        "Zeitfaktor": 1.1748815453699186,
+        "Zeitunterschied": 2901.2327586206898,
+        "Distanzfaktor": 0.9936876728378171,
+        "Umweg": 1067.594827586207
     },
     {
         "name": "Frankfurt",
         "lat": 50.1136,
         "long": 8.6797,
-        "Zeitfaktor": 1.242730252961881,
-        "Zeitunterschied": 2947.705263157895,
-        "Distanzfaktor": 1.0014784998147321,
-        "Umweg": 760.2947368421053
+        "Zeitfaktor": 1.2597263051930552,
+        "Zeitunterschied": 3239.5625,
+        "Distanzfaktor": 1.0050597803634012,
+        "Umweg": 1937.6875
+    },
+    {
+        "name": "Gelsenkirchen",
+        "lat": 51.5167,
+        "long": 7.1,
+        "Zeitfaktor": 1.1768326811540366,
+        "Zeitunterschied": 2944.405172413793,
+        "Distanzfaktor": 1.022242782859272,
+        "Umweg": 6025.853448275862
     },
     {
         "name": "Hamburg",
         "lat": 53.55,
         "long": 10.01,
-        "Zeitfaktor": 1.3653870509558568,
-        "Zeitunterschied": 5916.3125,
-        "Distanzfaktor": 1.003130948798122,
-        "Umweg": 1149.3125
+        "Zeitfaktor": 1.3463394907100485,
+        "Zeitunterschied": 5529.137931034483,
+        "Distanzfaktor": 1.001045546193565,
+        "Umweg": 639.3103448275862
     },
     {
         "name": "Hannover",
         "lat": 52.3744,
         "long": 9.7386,
-        "Zeitfaktor": 1.277750298268089,
-        "Zeitunterschied": 3676.351063829787,
-        "Distanzfaktor": 1.0031305160247947,
-        "Umweg": 735.4148936170212
+        "Zeitfaktor": 1.2692056327427226,
+        "Zeitunterschied": 3477.7155172413795,
+        "Distanzfaktor": 1.0029689418420324,
+        "Umweg": 730.5862068965517
     },
     {
         "name": "Karlsruhe",
         "lat": 49.0167,
         "long": 8.4,
-        "Zeitfaktor": 1.2678969848368724,
-        "Zeitunterschied": 4045.6979166666665,
-        "Distanzfaktor": 1.0080694951680602,
-        "Umweg": 3037.1458333333335
+        "Zeitfaktor": 1.2829270817248764,
+        "Zeitunterschied": 4392.956896551724,
+        "Distanzfaktor": 1.0082871089722896,
+        "Umweg": 3273.206896551724
+    },
+    {
+        "name": "Kiel",
+        "lat": 54.3233,
+        "long": 10.1394,
+        "Zeitfaktor": 1.3436921315023105,
+        "Zeitunterschied": 6626.448275862069,
+        "Distanzfaktor": 1.000830761981151,
+        "Umweg": 646.5086206896551
     },
     {
         "name": "Leipzig",
         "lat": 51.35,
         "long": 12.3833,
-        "Zeitfaktor": 1.4015787048808834,
-        "Zeitunterschied": 5730.301075268817,
-        "Distanzfaktor": 1.0092628970878452,
-        "Umweg": 3808.1075268817203
+        "Zeitfaktor": 1.3891260838531487,
+        "Zeitunterschied": 5670.56,
+        "Distanzfaktor": 1.0110433124852989,
+        "Umweg": 4157.32
     },
     {
         "name": "Mannheim",
         "lat": 49.4878,
         "long": 8.4661,
-        "Zeitfaktor": 1.2652931907119953,
-        "Zeitunterschied": 3634.9166666666665,
-        "Distanzfaktor": 1.0025086291781817,
-        "Umweg": 1121.7395833333333
+        "Zeitfaktor": 1.280027711006986,
+        "Zeitunterschied": 3989.875,
+        "Distanzfaktor": 1.0021780226575903,
+        "Umweg": 1042.544642857143
     },
     {
         "name": "Munich",
         "lat": 48.1372,
         "long": 11.5755,
-        "Zeitfaktor": 1.37655437541845,
-        "Zeitunterschied": 7244.208333333333,
-        "Distanzfaktor": 1.0029451733513526,
-        "Umweg": 2791.0416666666665
+        "Zeitfaktor": 1.3894432984620393,
+        "Zeitunterschied": 7641.3448275862065,
+        "Distanzfaktor": 1.0039764591183948,
+        "Umweg": 3089.646551724138
     },
     {
         "name": "M\u00f6nchengladbach",
         "lat": 51.2,
         "long": 6.4333,
-        "Zeitfaktor": 1.1836386275701754,
-        "Zeitunterschied": 3074.1666666666665,
-        "Distanzfaktor": 0.9993181406342019,
-        "Umweg": 1984.875
+        "Zeitfaktor": 1.1845853056918534,
+        "Zeitunterschied": 3154.9224137931033,
+        "Distanzfaktor": 1.0004473767521924,
+        "Umweg": 2126.7241379310344
     },
     {
         "name": "M\u00fcnster",
         "lat": 51.9625,
         "long": 7.6256,
-        "Zeitfaktor": 1.1960428951247344,
-        "Zeitunterschied": 3166.776595744681,
-        "Distanzfaktor": 1.006027700030107,
-        "Umweg": 2673.7659574468084
+        "Zeitfaktor": 1.2070891623470656,
+        "Zeitunterschied": 3200.6071428571427,
+        "Distanzfaktor": 1.0054303351061074,
+        "Umweg": 2557.151785714286
     },
     {
         "name": "Nuremberg",
         "lat": 49.4528,
         "long": 11.0778,
-        "Zeitfaktor": 1.3283764398910165,
-        "Zeitunterschied": 4726.125,
-        "Distanzfaktor": 1.006148981241675,
-        "Umweg": 2260.28125
+        "Zeitfaktor": 1.3399515489321703,
+        "Zeitunterschied": 5033.9051724137935,
+        "Distanzfaktor": 1.0049683526136324,
+        "Umweg": 1526.7844827586207
     },
     {
         "name": "Stuttgart",
         "lat": 48.7761,
         "long": 9.1775,
-        "Zeitfaktor": 1.3079412651119486,
-        "Zeitunterschied": 4838.802083333333,
-        "Distanzfaktor": 1.0127978245530072,
-        "Umweg": 5797.4375
+        "Zeitfaktor": 1.3248046504676358,
+        "Zeitunterschied": 5254.181034482759,
+        "Distanzfaktor": 1.0130959476279227,
+        "Umweg": 6047.068965517241
     },
     {
         "name": "Wiesbaden",
         "lat": 50.0825,
         "long": 8.24,
-        "Zeitfaktor": 1.229754760133758,
-        "Zeitunterschied": 2940.90625,
-        "Distanzfaktor": 1.0052040990761475,
-        "Umweg": 1209.4166666666667
+        "Zeitfaktor": 1.2453664559472177,
+        "Zeitunterschied": 3215.1637931034484,
+        "Distanzfaktor": 1.0060288560468267,
+        "Umweg": 1672.1637931034484
     },
     {
         "name": "Wuppertal",
         "lat": 51.2667,
         "long": 7.1833,
-        "Zeitfaktor": 1.1585815983242658,
-        "Zeitunterschied": 2688.3333333333335,
-        "Distanzfaktor": 1.0045077248638237,
-        "Umweg": 1423.9479166666667
+        "Zeitfaktor": 1.1637100585727815,
+        "Zeitunterschied": 2762.2844827586205,
+        "Distanzfaktor": 1.0048954288143053,
+        "Umweg": 1696.3103448275863
     }
 ];
