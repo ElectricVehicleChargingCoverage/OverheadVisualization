@@ -51,13 +51,13 @@ function getColor(minmax, value) {
     }
 }
 
-function createInfoTable(route) {
+function createRouteInfoTable(route) {
     const attributes = [
         {
             name: "strecke",
             display: "Strecke",
             method: (e) => {
-                return (e / 1000).toFixed(0);
+                return `${(e / 1000).toFixed(0)} km`;
             },
         },
         {
@@ -71,14 +71,14 @@ function createInfoTable(route) {
             name: "verbrauch",
             display: "Verbrauch",
             method: (e) => {
-                return e ? e.toFixed(2) : "-";
+                return e ? `${e.toFixed(2)} kWh` : "-";
             },
         },
         {
             name: "restreichweite",
-            display: "Restreichweite",
+            display: "Batteriestand",
             method: (e) => {
-                return e ? e.toFixed(1) : "-";
+                return e ? `${e.toFixed(1)} kWh` : "-";
             },
         },
         {
@@ -100,8 +100,8 @@ function createInfoTable(route) {
             <th> </th>
             <th>Verbrenner</th>
             <th>Audi E-Tron</th>
-            <th>Peugeot</th>
-            <th>Fiat</th>
+            <th>Peugeot e208</th>
+            <th>Fiat 500e</th>
         </tr>`;
     attributes.forEach((attribute) => {
         table += `<tr> <td> ${attribute.display} </td>`;
@@ -116,4 +116,83 @@ function createInfoTable(route) {
     });
     table += "</table> ";
     return table;
+}
+
+function createChargerInfoTable(chargerInfo) {
+    const attributes = [
+        {
+            name: "lengthInMeters",
+            display: "Strecke",
+            method: (e) => {
+                return  `${(e / 1000).toFixed(0)} km`;
+            },
+        },
+        {
+            name: "travelTimeInSeconds",
+            display: "Dauer",
+            method: (e) => {
+                return toHHMMSS(e);
+            },
+        },
+        {
+            name: "batteryConsumptionInkWh",
+            display: "Verbrauch",
+            method: (e) => {
+                return e ? `${e.toFixed(2)} kWh` : "-";
+            },
+        },
+        {
+            name: "remainingChargeAtArrivalInkWh",
+            display: "Batteriestand",
+            method: (e) => {
+                return e ? `${e.toFixed(1)} kWh` : "-";
+            },
+        },
+        {
+            name: "chargingTimeInSeconds",
+            display: "Ladezeit",
+            method: (e) => {
+                return e ? toHHMMSS(e) : "-";
+            },
+        },
+        {
+            name: "targetChargeInkWh",
+            display: "Zielladestand",
+            method: (e) => {
+                return e ? `${e.toFixed(1)} kWh` : "-";
+            },
+        },
+        {
+            name: "chargingPowerInkW",
+            display: "Ladepower",
+            method: (e) => {
+                return e ? `${e} kW` : "-";
+            },
+        },
+    ];
+    var table = `<table> <tr>
+            <th></th>`;
+    chargerInfo.forEach((fahrzeug) => {
+        table += `<th> ${
+            fahrzeug.name
+        } </th>`;
+    });
+    table += `</tr>`;
+    attributes.forEach((attribute) => {
+        table += `<tr> <td> ${attribute.display} </td>`;
+        chargerInfo.forEach((fahrzeug) => {
+            table += `<td> ${
+                attribute.method
+                    ? attribute.method(fahrzeug.leg[attribute.name])
+                    : fahrzeug.leg[attribute.name]
+            } </td>`;
+        });
+        table += "</tr> ";
+    });
+    table += "</table> ";
+    return table;
+}
+
+function shortVehicleName(name) {
+    return name.split(" ")[0];
 }

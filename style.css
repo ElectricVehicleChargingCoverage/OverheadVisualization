@@ -83,3 +83,11 @@ th {
   .sidebar {padding-top: 15px;}
   .sidebar a {font-size: 18px;}
 }
+
+.Peugeot-marker {
+  filter: hue-rotate(120deg);
+}
+
+.Fiat-marker {
+  filter: hue-rotate(240deg);
+}
