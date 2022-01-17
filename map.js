@@ -65,60 +65,7 @@ function showRoutesFrom(startCity) {
         var polyline = L.polyline(latlngs, { color, opacity: 0.7 });
         polyline.bindTooltip(`${route["timeoverhead"].toFixed(3)}`);
         polyline.bindPopup(
-            `<h2> ${route.Start} -> ${route.Ziel} (Score: ${route["timeoverhead"].toFixed(3)})</h2>
-        <table>
-        <tr>
-            <th> </th>
-            <th>Verbrenner</th>
-            <th>Audi E-Tron</th>
-            <th>Peugeot</th>
-            <th>Fiat</th>
-        </tr>
-        <tr>
-            <td>Strecke</td>
-            <td>${(route.Verbrennerstrecke / 1000).toFixed(0)}</td>
-            <td>${(route.Audistrecke / 1000).toFixed(0)}</td>
-            <td>${(route.Peugeotstrecke / 1000).toFixed(0)}</td>
-            <td>${(route.Fiatstrecke / 1000).toFixed(0)}</td>
-        </tr>
-        <tr>
-            <td>Dauer</td>
-            <td>${toHHMMSS(route.Verbrennerdauer)}</td>
-            <td>${toHHMMSS(route.Audidauer)}</td>
-            <td>${toHHMMSS(route.Peugeotdauer)}</td>
-            <td>${toHHMMSS(route.Fiatdauer)}</td>
-        </tr>
-        <tr>
-            <td>Verbrauch</td>
-            <td>-</td>
-            <td>${route.Audiverbrauch.toFixed(2)}</td>
-            <td>${route.Peugeotverbrauch.toFixed(2)}</td>
-            <td>${route.Fiatverbrauch.toFixed(2)}</td>
-        </tr>
-        <tr>
-            <td>Ladezeit</td>
-            <td>-</td>
-            <td>${route.Audiladezeit ? toHHMMSS(route.Audiladezeit) : "-"}</td>
-            <td>${
-                route.Peugeotladezeit ? toHHMMSS(route.Peugeotladezeit) : "-"
-            }</td>
-            <td>${route.Fiatladezeit ? toHHMMSS(route.Fiatladezeit) : "-"}</td>
-        </tr>
-        <tr>
-            <td>Ladestops</td>
-            <td>-</td>
-            <td>${route.Audiladestops}</td>
-            <td>${route.Peugeotladestops}</td>
-            <td>${route.Fiatladestops}</td>
-        </tr>
-        <tr>
-            <td>Restreichweite</td>
-            <td>-</td>
-            <td>${route.Audirestreichweite.toFixed(1)}</td>
-            <td>${route.Peugeotrestreichweite.toFixed(1)}</td>
-            <td>${route.Fiatrestreichweite.toFixed(1)}</td>
-        </tr>
-        </table>`,
+            `<h2> ${route.Start} -> ${route.Ziel} (Score: ${route["timeoverhead"].toFixed(3)})</h2> ${createInfoTable(route)}`,
             { maxWidth: "600", className: "route-popup" }
         );
         polyline.addTo(routeLayer);

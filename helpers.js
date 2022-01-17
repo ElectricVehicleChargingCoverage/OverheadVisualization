@@ -22,12 +22,15 @@ function analyzeAttribute(data, attribute) {
 
 function getOverheadScores(routes) {
     routes.forEach((route) => {
+        const Fahrzeuge = route.Fahrzeuge;
         const timeoverhead =
-            (route.Audidauer + route.Peugeotdauer + route.Fiatdauer) /
-            (3 * route.Verbrennerdauer);
+            (Fahrzeuge[1].dauer + Fahrzeuge[2].dauer + Fahrzeuge[3].dauer) /
+            (3 * Fahrzeuge[0].dauer);
         const umweg =
-            (route.Audistrecke + route.Peugeotstrecke + route.Fiatstrecke) /
-            (3 * route.Verbrennerstrecke);
+            (Fahrzeuge[1].strecke +
+                Fahrzeuge[2].strecke +
+                Fahrzeuge[3].strecke) /
+            (3 * Fahrzeuge[0].strecke);
         route["timeoverhead"] = timeoverhead;
         route["umweg"] = umweg;
     });
@@ -46,4 +49,71 @@ function getColor(minmax, value) {
         const green = 255 - red;
         return `rgb(${red}, ${green}, 0)`;
     }
+}
+
+function createInfoTable(route) {
+    const attributes = [
+        {
+            name: "strecke",
+            display: "Strecke",
+            method: (e) => {
+                return (e / 1000).toFixed(0);
+            },
+        },
+        {
+            name: "dauer",
+            display: "Dauer",
+            method: (e) => {
+                return toHHMMSS(e);
+            },
+        },
+        {
+            name: "verbrauch",
+            display: "Verbrauch",
+            method: (e) => {
+                return e ? e.toFixed(2) : "-";
+            },
+        },
+        {
+            name: "restreichweite",
+            display: "Restreichweite",
+            method: (e) => {
+                return e ? e.toFixed(1) : "-";
+            },
+        },
+        {
+            name: "ladezeit",
+            display: "Ladezeit",
+            method: (e) => {
+                return e ? toHHMMSS(e) : "-";
+            },
+        },
+        {
+            name: "legs",
+            display: "Ladestops",
+            method: (e) => {
+                return e ? e.length - 1 : "-";
+            },
+        },
+    ];
+    var table = `<table> <tr>
+            <th> </th>
+            <th>Verbrenner</th>
+            <th>Audi E-Tron</th>
+            <th>Peugeot</th>
+            <th>Fiat</th>
+        </tr>`;
+    attributes.forEach((attribute) => {
+        table += `<tr> <td> ${attribute.display} </td>`;
+        route.Fahrzeuge.forEach((fahrzeug) => {
+            table += `<td> ${
+                attribute.method
+                    ? attribute.method(fahrzeug[attribute.name])
+                    : fahrzeug[attribute.name]
+            } </td>`;
+        });
+        table += "</tr> ";
+    });
+    table += "</table> ";
+    return table;
 }
