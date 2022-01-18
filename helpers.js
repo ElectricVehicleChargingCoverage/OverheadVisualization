@@ -92,7 +92,7 @@ function createRouteInfoTable(route) {
             name: "legs",
             display: "Ladestops",
             method: (e) => {
-                return e ? (e > 0 ? e.length - 1 : "-") : "-";
+                return e ? (e.length > 0 ? e.length - 1 : "-") : "-";
             },
         },
     ];
