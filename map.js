@@ -76,7 +76,8 @@ function showRoutesFrom(startCity) {
         polyline.bindPopup(
             `<h2> ${route.Start} -> ${route.Ziel} (Score: ${route[
                 "timeoverhead"
-            ].toFixed(3)})</h2> ${createRouteInfoTable(route)}`,
+            ].toFixed(3)})</h2> ${createRouteInfoTable(route)}
+            <a href="javascript:void(0)" title="Not implemented yet" onclick="calculateRoutes(${latlngs})"> Calculate routes </a>`,
             { maxWidth: "600", className: "route-popup" }
         );
         polyline.addTo(routeLayer);
@@ -142,3 +143,7 @@ fiatChargingStops.on("add", (e) => {
         L.DomUtil.addClass(marker._icon, "Fiat-marker")
     );
 });
+
+function calculateRoutes(start_lat, start_long, dest_lat, dest_long) {
+    console.log(start_lat, start_long, dest_lat, dest_long);
+}
