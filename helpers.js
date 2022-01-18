@@ -57,14 +57,14 @@ function createRouteInfoTable(route) {
             name: "strecke",
             display: "Strecke",
             method: (e) => {
-                return `${(e / 1000).toFixed(0)} km`;
+                return e ? `${(e / 1000).toFixed(0)} km` : "-";
             },
         },
         {
             name: "dauer",
             display: "Dauer",
             method: (e) => {
-                return toHHMMSS(e);
+                return e ? toHHMMSS(e) : "-";
             },
         },
         {
@@ -92,7 +92,7 @@ function createRouteInfoTable(route) {
             name: "legs",
             display: "Ladestops",
             method: (e) => {
-                return e ? e.length - 1 : "-";
+                return e ? (e > 0 ? e.length - 1 : "-") : "-";
             },
         },
     ];
