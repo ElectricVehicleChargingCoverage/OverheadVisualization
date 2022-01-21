@@ -144,10 +144,6 @@ fiatChargingStops.on("add", (e) => {
     );
 });
 
-function calculateRoutes(start_lat, start_long, dest_lat, dest_long) {
-    console.log(start_lat, start_long, dest_lat, dest_long);
-}
-
 function displayRoute(latlngs, summary) {
     const polyline = L.polyline(latlngs).addTo(map);
     polyline.bindPopup(JSON.stringify(summary));
