@@ -124,7 +124,7 @@ function createChargerInfoTable(chargerInfo) {
             name: "lengthInMeters",
             display: "Strecke",
             method: (e) => {
-                return  `${(e / 1000).toFixed(0)} km`;
+                return `${(e / 1000).toFixed(0)} km`;
             },
         },
         {
@@ -173,9 +173,7 @@ function createChargerInfoTable(chargerInfo) {
     var table = `<table> <tr>
             <th></th>`;
     chargerInfo.forEach((fahrzeug) => {
-        table += `<th> ${
-            fahrzeug.name
-        } </th>`;
+        table += `<th> ${fahrzeug.name} </th>`;
     });
     table += `</tr>`;
     attributes.forEach((attribute) => {
@@ -201,11 +199,24 @@ function httpGetAsync(theUrl, callback, callbackInfo = null) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            if (callbackInfo)
-                callback(xmlHttp.responseText, callbackInfo)
-            else
-                callback(xmlHttp.responseText);
+            if (callbackInfo) callback(xmlHttp.responseText, callbackInfo);
+            else callback(xmlHttp.responseText);
     };
     xmlHttp.open("GET", theUrl, true); // true for asynchronous
     xmlHttp.send(null);
+}
+
+function httpPostAsync(theUrl, body, callback, callbackInfo = null) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            if (callbackInfo) callback(xmlHttp.responseText, callbackInfo);
+            else callback(xmlHttp.responseText);
+        } else if (xmlHttp.readyState == 4) {
+            console.warn(xmlHttp.status, xmlHttp.responseText);
+        }
+    };
+    xmlHttp.open("POST", theUrl, true); // true for asynchronous
+    xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlHttp.send(body);
 }

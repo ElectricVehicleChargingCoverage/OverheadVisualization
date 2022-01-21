@@ -1,12 +1,14 @@
 const key = "*";
 const baseUrlCombustion = "https://api.tomtom.com/routing/1/calculateRoute";
+const baseUrlEV =
+    "https://api.tomtom.com/routing/1/calculateLongDistanceEVRoute";
 const traffic = false;
 
 // httpGetAsync(url, displayAPIResult);
 
 function calculateRoutes(start_lat, start_long, dest_lat, dest_long) {
     const coordinates = `${start_lat},${start_long}:${dest_lat},${dest_long}`;
-    calculateCombustionRoute(coordinates);
+    // calculateCombustionRoute(coordinates);
     calculateEVRoutes(coordinates);
 }
 
@@ -28,7 +30,27 @@ maxAlternatives=0&language=de-DE\
     httpGetAsync(url, displayAPIResult, "Combustion");
 }
 
-function calculateEVRoutes(coordinates) {}
+function calculateEVRoutes(coordinates) {
+    vehicleData.forEach((vehicle) => {
+        const body = JSON.stringify(vehicle.body);
+        const url = `${baseUrlEV}/${coordinates}/json?\
+vehicleEngineType=electric&avoid=unpavedRoads\
+&traffic=${traffic}\
+&constantSpeedConsumptionInkWhPerHundredkm=${vehicle.constantSpeedConsumption}\
+&currentChargeInkWh=${vehicle.currentChargeInkWh.toFixed(2)}\
+&maxChargeInkWh=${vehicle.maxCharge}\
+&minChargeAtDestinationInkWh=${vehicle.minChargeAtDestinationInkWh.toFixed(2)}\
+&minChargeAtChargingStopsInkWh=${vehicle.minChargeAtChargingStopsInkWh.toFixed(
+            2
+        )}\
+&vehicleWeight=${vehicle.weight}\
+&uphillEfficiency=${vehicle.uphillEfficiency}\
+&downhillEfficiency=${vehicle.downhillEfficiency}\
+&auxiliaryPowerInkW=${vehicle.auxiliaryPower}\
+&key=${key}`;
+        httpPostAsync(url, body, displayAPIResult, vehicle);
+    });
+}
 
 function displayAPIResult(response, vehicleInfo) {
     const json = JSON.parse(response);
