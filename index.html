@@ -22,8 +22,10 @@
         >&times;</a
     >
     <form onsubmit="saveAPIKey(event)">
-        <label for="apiKey">TomTom API-Key:</label>
-        <input type="text" id="apiKey" name="APIKey" placeholder="Your API-Key">
+        <label for="apiKeyInput">TomTom API-Key:</label>
+        <input type="text" id="apiKeyInput" name="APIKey" placeholder="Your API-Key">
+        <label for="vehicleDataInput">Vehicle Data (Array):</label>
+        <input type="text" id="vehicleDataInput" name="vehicleData" placeholder="[{name: ...}, {...}, ...]">
         <input type="submit" value="Save">
     </form>
 </div>
@@ -38,7 +40,6 @@
 <script src="data/cityData.js"></script>
 <script src="data/routeData.js"></script>
 <script src="map.js"></script>
-<script src="data/vehicleData.js"></script>
 <script src="calculateRoutes.js"></script>
 
 <script>
@@ -50,10 +51,33 @@
         document.getElementById("sidebar").style.width = "0";
     }
 
-    $("#apiKey").val(localStorage.getItem("API-Key"));
+    var vehicleData = [];
+
     function saveAPIKey(e) {
         e.preventDefault();
-        const APIKey = $("#apiKey").val();
+        const APIKey = $("#apiKeyInput").val();
         localStorage.setItem("API-Key", APIKey);
+        try {
+            const rawVehicleData = $("#vehicleDataInput").val();
+            const parsedData = JSON.parse(rawVehicleData);
+            localStorage.setItem("vehicleData", JSON.stringify(parsedData));
+            vehicleData = parsedData;
+        }
+        catch (e){
+            window.alert(e);
+            console.warn(e);
+        }
+    }
+
+    try {
+        $("#apiKeyInput").val(localStorage.getItem("API-Key"));
+        $("#vehicleDataInput").val(localStorage.getItem("vehicleData"));
+        const rawVehicleData = localStorage.getItem("vehicleData");
+        if (rawVehicleData) {
+            vehicleData = JSON.parse(rawVehicleData);
+        }
+    }
+    catch (e) {
+        console.warn(e);
     }
 </script>
