@@ -5,5 +5,15 @@ httpGetAsync(url, displayAPIResult);
 
 function displayAPIResult(response) {
     const json = JSON.parse(response);
-    console.log(json);
+    const route = json.routes[0];
+    const legs = route.legs;
+    const summary = route.summary;
+    const latlngs = [];
+    legs.forEach(leg => {
+        const points = leg.points;
+        points.forEach(point => {
+            latlngs.push([point.latitude, point.longitude]);
+        });
+    });
+    displayRoute(latlngs, summary);
 }
