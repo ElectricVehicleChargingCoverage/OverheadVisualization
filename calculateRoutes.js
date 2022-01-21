@@ -4,11 +4,9 @@ const baseUrlEV =
     "https://api.tomtom.com/routing/1/calculateLongDistanceEVRoute";
 const traffic = false;
 
-// httpGetAsync(url, displayAPIResult);
-
 function calculateRoutes(start_lat, start_long, dest_lat, dest_long) {
     const coordinates = `${start_lat},${start_long}:${dest_lat},${dest_long}`;
-    // calculateCombustionRoute(coordinates);
+    calculateCombustionRoute(coordinates);
     calculateEVRoutes(coordinates);
 }
 
@@ -27,7 +25,7 @@ maxAlternatives=0&language=de-DE\
 &vehicleCommercial=false\
 &vehicleEngineType=combustion\
 &key=${key}`;
-    httpGetAsync(url, displayAPIResult, "Combustion");
+    httpGetAsync(url, displayAPIResult, {name: "Combustion"});
 }
 
 function calculateEVRoutes(coordinates) {
