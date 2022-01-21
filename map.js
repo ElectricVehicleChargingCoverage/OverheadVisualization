@@ -1,8 +1,9 @@
 var map = L.map("map").setView([51.163361, 10.447683], 7);
 var routeLayer = L.layerGroup().addTo(map);
-var audiChargingStops = L.layerGroup().addTo(map);
-var peugeotChargingStops = L.layerGroup().addTo(map);
-var fiatChargingStops = L.layerGroup().addTo(map);
+var audiLayer = L.layerGroup().addTo(map);
+var peugeotLayer = L.layerGroup().addTo(map);
+var fiatLayer = L.layerGroup().addTo(map);
+var combustionLayer = L.layerGroup().addTo(map);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> <br />
@@ -11,9 +12,10 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 var overlayMaps = {
-    "Audi E-Tron": audiChargingStops,
-    "Peugeot e208": peugeotChargingStops,
-    "Fiat 500e": fiatChargingStops,
+    "Audi E-Tron": audiLayer,
+    "Peugeot e208": peugeotLayer,
+    "Fiat 500e": fiatLayer,
+    "Verbrenner": combustionLayer,
 };
 L.control.layers({}, overlayMaps).addTo(map);
 
@@ -88,9 +90,7 @@ function showRoutesFrom(startCity) {
 }
 
 function showChargingStationsFrom(route) {
-    audiChargingStops.clearLayers();
-    peugeotChargingStops.clearLayers();
-    fiatChargingStops.clearLayers();
+    clearVehicleLayers();
     markerList = {};
     route.Fahrzeuge.forEach((fahrzeug) => {
         const legs = fahrzeug.legs;
@@ -126,24 +126,58 @@ function showChargingStationsFrom(route) {
     });
 }
 
-audiChargingStops.on("add", (e) => {
-    audiChargingStops.eachLayer((marker) =>
+function clearVehicleLayers() {
+    audiLayer.clearLayers();
+    peugeotLayer.clearLayers();
+    fiatLayer.clearLayers();
+    combustionLayer.clearLayers();
+}
+
+audiLayer.on("add", (e) => {
+    audiLayer.eachLayer((marker) =>
         L.DomUtil.addClass(marker._icon, "Audi-marker")
     );
 });
 
-peugeotChargingStops.on("add", (e) => {
-    peugeotChargingStops.eachLayer((marker) =>
+peugeotLayer.on("add", (e) => {
+    peugeotLayer.eachLayer((marker) =>
         L.DomUtil.addClass(marker._icon, "Peugeot-marker")
     );
 });
 
-fiatChargingStops.on("add", (e) => {
-    fiatChargingStops.eachLayer((marker) =>
+fiatLayer.on("add", (e) => {
+    fiatLayer.eachLayer((marker) =>
         L.DomUtil.addClass(marker._icon, "Fiat-marker")
     );
 });
 
-function calculateRoutes(start_lat, start_long, dest_lat, dest_long) {
-    console.log(start_lat, start_long, dest_lat, dest_long);
+function displayRoute(latlngs, summary, vehicleInfo) {
+    const polyline = L.polyline(latlngs);
+    polyline.bindPopup(getPopupFromSummary(summary, vehicleInfo), {
+        maxWidth: "600",
+        className: "route-popup",
+    });
+    polyline.bindTooltip(vehicleInfo.name);
+    const options = { opacity: 0.75};
+    switch(shortVehicleName(vehicleInfo.name)) {
+        case "Combustion":
+            options.color = "#0000ff";
+            options.weight = 5;
+            options.opacity = 0.3;
+            polyline.addTo(combustionLayer);
+            break;
+        case "Audi":
+            options.color = "#4c9dcb";
+            polyline.addTo(audiLayer);
+            break;
+        case "Peugeot":
+            options.color = "#ea53ee";
+            polyline.addTo(peugeotLayer);
+            break;
+        case "Fiat":
+            options.color = "#569937";
+            polyline.addTo(fiatLayer);
+            break;
+    };
+    polyline.setStyle(options);
 }
