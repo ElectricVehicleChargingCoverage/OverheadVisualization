@@ -25,12 +25,12 @@ maxAlternatives=0&language=de-DE\
 &vehicleCommercial=false\
 &vehicleEngineType=combustion\
 &key=${key}`;
-    httpGetAsync(url, displayAPIResult);
+    httpGetAsync(url, displayAPIResult, "Combustion");
 }
 
 function calculateEVRoutes(coordinates) {}
 
-function displayAPIResult(response) {
+function displayAPIResult(response, vehicleInfo) {
     const json = JSON.parse(response);
     const route = json.routes[0];
     const legs = route.legs;
@@ -42,5 +42,5 @@ function displayAPIResult(response) {
             latlngs.push([point.latitude, point.longitude]);
         });
     });
-    displayRoute(latlngs, summary);
+    displayRoute(latlngs, summary, vehicleInfo);
 }

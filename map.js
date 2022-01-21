@@ -144,7 +144,8 @@ fiatChargingStops.on("add", (e) => {
     );
 });
 
-function displayRoute(latlngs, summary) {
+function displayRoute(latlngs, summary, vehicleInfo) {
     const polyline = L.polyline(latlngs).addTo(map);
     polyline.bindPopup(JSON.stringify(summary));
+    polyline.bindTooltip(vehicleInfo);
 }

@@ -197,11 +197,14 @@ function shortVehicleName(name) {
     return name.split(" ")[0];
 }
 
-function httpGetAsync(theUrl, callback) {
+function httpGetAsync(theUrl, callback, callbackInfo = null) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
+            if (callbackInfo)
+                callback(xmlHttp.responseText, callbackInfo)
+            else
+                callback(xmlHttp.responseText);
     };
     xmlHttp.open("GET", theUrl, true); // true for asynchronous
     xmlHttp.send(null);
