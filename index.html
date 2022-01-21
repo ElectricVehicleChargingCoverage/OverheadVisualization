@@ -21,6 +21,11 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
         >&times;</a
     >
+    <form onsubmit="saveAPIKey(event)">
+        <label for="apiKey">TomTom API-Key:</label>
+        <input type="text" id="apiKey" name="APIKey" placeholder="Your API-Key">
+        <input type="submit" value="Save">
+    </form>
 </div>
 
 <div id="main">
@@ -43,5 +48,12 @@
 
     function closeNav() {
         document.getElementById("sidebar").style.width = "0";
+    }
+
+    $("#apiKey").val(localStorage.getItem("API-Key"));
+    function saveAPIKey(e) {
+        e.preventDefault();
+        const APIKey = $("#apiKey").val();
+        localStorage.setItem("API-Key", APIKey);
     }
 </script>

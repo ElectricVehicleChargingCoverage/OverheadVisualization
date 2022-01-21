@@ -45,6 +45,20 @@ th {
     width: 600px;
 }
 
+label {
+  color: white;
+}
+
+input[type=text], select {
+  width: 94%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
 .sidebar {
   height: 100%;
   width: 0;
