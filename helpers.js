@@ -220,3 +220,15 @@ function httpPostAsync(theUrl, body, callback, callbackInfo = null) {
     xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlHttp.send(body);
 }
+
+
+function getPopupFromSummary(summary, vehicleInfo) {
+    var result = `<h2> ${vehicleInfo.name} </h2>
+    <table> <tr> <th> Attribute </th> <th> Value </th> </tr>`;
+    Object.keys(summary).forEach((key) => {
+        const data = summary[key];
+        result += `<tr> <td> ${key} </td> <td> ${data} </td></tr>`;
+    });
+    result += "</table>";
+    return result;
+}

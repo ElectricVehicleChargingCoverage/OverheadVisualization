@@ -153,8 +153,11 @@ fiatLayer.on("add", (e) => {
 
 function displayRoute(latlngs, summary, vehicleInfo) {
     const polyline = L.polyline(latlngs);
-    polyline.bindPopup(JSON.stringify(summary));
-    polyline.bindTooltip(vehicleInfo);
+    polyline.bindPopup(getPopupFromSummary(summary, vehicleInfo), {
+        maxWidth: "600",
+        className: "route-popup",
+    });
+    polyline.bindTooltip(vehicleInfo.name);
     const options = { opacity: 0.75};
     switch(shortVehicleName(vehicleInfo.name)) {
         case "Combustion":
