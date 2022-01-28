@@ -28,6 +28,19 @@
         <input type="text" id="vehicleDataInput" name="vehicleData" placeholder="[{name: ...}, {...}, ...]">
         <input type="submit" value="Save">
     </form>
+
+
+    <form onsubmit="applyCostData(event)">
+        <h2> Combustion </h2>
+        <label for="gasPriceInput">Price per liter:</label>
+        <input type="number" id="gasPriceInput" name="gasPrice" placeholder="Gas price" step="0.001">
+        <label for="gasConsumptionInput">Gas consumption per 100km in liter:</label>
+        <input type="number" id="gasConsumptionInput" name="gasConsumption" placeholder="consumption in liter" step="0.001">
+        <h2> Electric </h2>
+        <label for="pricekWhInput">Price per kWh:</label>
+        <input type="number" id="pricekWhInput" name="pricekWh" placeholder="price" step="0.001">
+        <input type="submit" value="Save">
+    </form>
 </div>
 
 <div id="main">
@@ -52,6 +65,9 @@
     }
 
     var vehicleData = [];
+    var gasPrice = 0;
+    var gasConsumption = 0;
+    var kWhPrice = 0;
 
     function saveAPIKey(e) {
         e.preventDefault();
@@ -79,5 +95,13 @@
     }
     catch (e) {
         console.warn(e);
+    }
+
+    function applyCostData(e) {
+        e.preventDefault();
+        gasPrice = $("#gasPriceInput").val();
+        gasConsumption = $("#gasConsumptionInput").val();
+        kWhPrice = $("#pricekWhInput").val();
+        console.log(gasPrice, gasConsumption, kWhPrice);
     }
 </script>

@@ -49,7 +49,7 @@ form label {
   color: white;
 }
 
-input[type=text], select {
+input[type=text], select, input[type=number] {
   width: 94%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -70,6 +70,7 @@ input[type=text], select {
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
+  color: white;
 }
 
 .sidebar a {
