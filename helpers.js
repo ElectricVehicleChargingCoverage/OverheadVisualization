@@ -72,13 +72,13 @@ function createRouteInfoTable(route) {
         {
             name: "verbrauch",
             display: "Consumption",
-            method: (e) => {
-                return e ? `${e.toFixed(2)} kWh` : "-";
+            method: (e, v) => {
+                return e ? `${e.toFixed(2)} ${v == "Verbrenner" ? "l" : "kWh"}` : "-";
             },
         },
         {
             name: "restreichweite",
-            display: "Battery on dest",
+            display: "Remaining charge",
             method: (e) => {
                 return e ? `${e.toFixed(1)} kWh` : "-";
             },
@@ -92,9 +92,16 @@ function createRouteInfoTable(route) {
         },
         {
             name: "legs",
-            display: "Charing stops",
+            display: "Charging stops",
             method: (e) => {
                 return e ? (e.length > 0 ? e.length - 1 : "-") : "-";
+            },
+        },
+        {
+            name: "costs",
+            display: "Costs",
+            method: (e) => {
+                return e ? `${e.toFixed(2)} &euro;` : "-";
             },
         },
     ];
@@ -110,7 +117,7 @@ function createRouteInfoTable(route) {
         route.Fahrzeuge.forEach((fahrzeug) => {
             table += `<td> ${
                 attribute.method
-                    ? attribute.method(fahrzeug[attribute.name])
+                    ? attribute.method(fahrzeug[attribute.name], fahrzeug.name)
                     : fahrzeug[attribute.name]
             } </td>`;
         });
@@ -124,56 +131,56 @@ function createChargerInfoTable(chargerInfo) {
     const attributes = [
         {
             name: "lengthInMeters",
-            display: "Strecke",
+            display: "Distance",
             method: (e) => {
                 return `${(e / 1000).toFixed(0)} km`;
             },
         },
         {
             name: "travelTimeInSeconds",
-            display: "Dauer",
+            display: "Duration",
             method: (e) => {
                 return toHHMMSS(e);
             },
         },
         {
             name: "batteryConsumptionInkWh",
-            display: "Verbrauch",
+            display: "Consumption",
             method: (e) => {
                 return e ? `${e.toFixed(2)} kWh` : "-";
             },
         },
         {
             name: "remainingChargeAtArrivalInkWh",
-            display: "Batteriestand",
+            display: "Remaining Charge",
             method: (e) => {
                 return e ? `${e.toFixed(1)} kWh` : "-";
             },
         },
         {
             name: "chargingTimeInSeconds",
-            display: "Ladezeit",
+            display: "Charging time",
             method: (e) => {
                 return e ? toHHMMSS(e) : "-";
             },
         },
         {
             name: "targetChargeInkWh",
-            display: "Zielladestand",
+            display: "Target charge",
             method: (e) => {
                 return e ? `${e.toFixed(1)} kWh` : "-";
             },
         },
         {
             name: "chargingPowerInkW",
-            display: "Ladepower",
+            display: "Chargingpower",
             method: (e) => {
                 return e ? `${e} kW` : "-";
             },
         },
     ];
     var table = `<table> <tr>
-            <th></th>`;
+            <th>Since last stop</th>`;
     chargerInfo.forEach((fahrzeug) => {
         table += `<th> ${fahrzeug.name} </th>`;
     });
@@ -197,38 +204,35 @@ function createCityInfoTable(city) {
     const Vehicles = ["Verbrenner", "Audi E-Tron", "Peugeot e208", "Fiat 500e"];
     const attributes = [
         {
-            name: "dauer",
             display: "Timefactor",
             method: (city, vehicle) => {
                 return parseFloat(city["timeFactor"][vehicle].toFixed(3));
             },
         },
         {
-            name: "dauer",
             display: "Timedifference",
             method: (city, vehicle) => {
                 return toHHMMSS(city["timeDifference"][vehicle]);
             },
         },
         {
-            name: "strecke",
             display: "Distance-factor",
             method: (city, vehicle) => {
                 return parseFloat(city["distanceFactor"][vehicle].toFixed(3));
             },
         },
         {
-            name: "strecke",
             display: "Detour",
             method: (city, vehicle) => {
-                return `${city["distanceDifference"][vehicle].toFixed(0) / 1000} km`;
+                return `${
+                    city["distanceDifference"][vehicle].toFixed(0) / 1000
+                } km`;
             },
         },
         {
-            name: "strecke",
             display: "Costs",
             method: (city, vehicle) => {
-                return `${city["costs"][vehicle].toFixed(2)} euro`;
+                return `${city["costs"][vehicle].toFixed(2)} &euro;`;
             },
         },
     ];
@@ -265,6 +269,22 @@ function compareVehicleScoresForCity(
     const sum = mapped.reduce((a, b) => a + b, 0);
     const avg = sum / mapped.length || 0;
     return avg;
+}
+
+function getCostsForRoutes() {
+    const routes = routeData;
+    routes.forEach((route) => {
+        route.Fahrzeuge.forEach((fahrzeug) => {
+            if (fahrzeug.name == "Verbrenner") {
+                const distance = fahrzeug["strecke"];
+                fahrzeug["verbrauch"] = ((distance * gasConsumption) / 100000);
+                fahrzeug["costs"] = ((distance * gasConsumption) / 100000) * gasPrice;
+            } else {
+                const consumption = fahrzeug["verbrauch"];
+                fahrzeug["costs"] = consumption * kWhPrice;
+            }
+        })
+    });
 }
 
 function getCostsForCity(city, vehicle) {
@@ -392,7 +412,6 @@ function calculateCityScores() {
             city[attribute.name]["average"] = sum / 3;
         });
     });
-    console.log(cityData);
 }
 
 function calculateRouteScores() {
@@ -401,6 +420,7 @@ function calculateRouteScores() {
         { name: "dauer", new: "time" },
     ];
     const routes = routeData;
+    getCostsForRoutes();
     routes.forEach((route) => {
         attributes.forEach((attribute) => {
             route[`${attribute.new}Factor`] = {};
