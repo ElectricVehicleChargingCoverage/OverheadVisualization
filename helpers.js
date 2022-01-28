@@ -73,7 +73,9 @@ function createRouteInfoTable(route) {
             name: "verbrauch",
             display: "Consumption",
             method: (e, v) => {
-                return e ? `${e.toFixed(2)} ${v == "Verbrenner" ? "l" : "kWh"}` : "-";
+                return e
+                    ? `${e.toFixed(2)} ${v == "Verbrenner" ? "l" : "kWh"}`
+                    : "-";
             },
         },
         {
@@ -277,13 +279,14 @@ function getCostsForRoutes() {
         route.Fahrzeuge.forEach((fahrzeug) => {
             if (fahrzeug.name == "Verbrenner") {
                 const distance = fahrzeug["strecke"];
-                fahrzeug["verbrauch"] = ((distance * gasConsumption) / 100000);
-                fahrzeug["costs"] = ((distance * gasConsumption) / 100000) * gasPrice;
+                fahrzeug["verbrauch"] = (distance * gasConsumption) / 100000;
+                fahrzeug["costs"] =
+                    ((distance * gasConsumption) / 100000) * gasPrice;
             } else {
                 const consumption = fahrzeug["verbrauch"];
                 fahrzeug["costs"] = consumption * kWhPrice;
             }
-        })
+        });
     });
 }
 
