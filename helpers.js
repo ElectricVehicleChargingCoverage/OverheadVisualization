@@ -199,33 +199,44 @@ function createCityInfoTable(city) {
         {
             name: "dauer",
             display: "Timefactor",
-            get_difference: false,
-            method: (a, b, c, d) => {
-                return parseFloat(compareVehicleScoresForCity(a, b, c, d).toFixed(3));
+            method: (a, b) => {
+                return parseFloat(
+                    compareVehicleScoresForCity(a, b, "dauer", false).toFixed(3)
+                );
             },
         },
         {
             name: "dauer",
             display: "Timedifference",
-            get_difference: true,
-            method: (a, b, c, d) => {
-                return toHHMMSS(compareVehicleScoresForCity(a, b, c, d));
+            method: (a, b) => {
+                return toHHMMSS(
+                    compareVehicleScoresForCity(a, b, "dauer", true)
+                );
             },
         },
         {
             name: "strecke",
             display: "Distance-factor",
-            get_difference: false,
-            method: (a, b, c, d) => {
-                return parseFloat(compareVehicleScoresForCity(a, b, c, d).toFixed(3));
+            method: (a, b) => {
+                return parseFloat(
+                    compareVehicleScoresForCity(a, b, "strecke", false).toFixed(
+                        3
+                    )
+                );
             },
         },
         {
             name: "strecke",
             display: "Detour",
-            get_difference: true,
-            method: (a, b, c, d) => {
-                return `${compareVehicleScoresForCity(a, b, c, d).toFixed(0)/1000} km`;
+            method: (a, b) => {
+                return `${compareVehicleScoresForCity(a, b, "strecke", true).toFixed(0)/1000} km`;
+            },
+        },
+        {
+            name: "strecke",
+            display: "Detour",
+            method: (a, b) => {
+                return `${compareVehicleScoresForCity(a, b, "strecke", true).toFixed(0)/1000} km`;
             },
         },
     ];
@@ -239,7 +250,7 @@ function createCityInfoTable(city) {
     attributes.forEach((attribute) => {
         table += `<tr> <td> ${attribute.display} </td>`;
         Vehicles.forEach((vehicle) => {
-            table += `<td> ${attribute.method(city, vehicle, attribute.name, attribute.get_difference)} </td>`;
+            table += `<td> ${attribute.method(city, vehicle)} </td>`;
         });
         table += "</tr> ";
     });
@@ -261,6 +272,10 @@ function compareVehicleScoresForCity(city, vehicle, attribute, get_difference = 
     const sum = mapped.reduce((a, b) => a + b, 0);
     const avg = sum / mapped.length || 0;
     return avg;
+}
+
+function getCostsForCity(city, vehicle) {
+    const routes = getRoutesOfCity(city.name);
 }
 
 function getRoutesOfCity(cityname) {

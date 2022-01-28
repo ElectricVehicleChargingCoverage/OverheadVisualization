@@ -65,7 +65,7 @@ cityData.forEach((city) => {
 });
 
 function showRoutesFrom(startCity) {
-    const routes = routeData.filter((route) => route.Start == startCity);
+    const routes = getRoutesOfCity(startCity);
     getOverheadScores(routes);
     routeLayer.clearLayers(); // Remove previously shown routes
     minmax = analyzeAttribute(routes, "timeoverhead");
