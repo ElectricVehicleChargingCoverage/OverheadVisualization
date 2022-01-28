@@ -64,7 +64,7 @@ function createRouteInfoTable(route) {
             },
         },
         {
-            display: "Distance factor",
+            display: "Distancefactor",
             method: (vehicle, route) => {
                 return route["distanceFactor"][vehicle.name]
                     ? `${parseFloat(
@@ -74,7 +74,7 @@ function createRouteInfoTable(route) {
             },
         },
         {
-            display: "Distance difference",
+            display: "Distancedifference",
             method: (vehicle, route) => {
                 return route["distanceDifference"][vehicle.name]
                     ? `${parseFloat(
@@ -92,7 +92,7 @@ function createRouteInfoTable(route) {
             },
         },
         {
-            display: "Time factor",
+            display: "Timefactor",
             method: (vehicle, route) => {
                 return route["timeFactor"][vehicle.name]
                     ? `${parseFloat(
@@ -102,11 +102,11 @@ function createRouteInfoTable(route) {
             },
         },
         {
-            display: "Time difference",
+            display: "Timedifference",
             method: (vehicle, route) => {
                 return route["timeDifference"][vehicle.name]
-                    ? `${parseFloat(
-                          route["timeDifference"][vehicle.name].toFixed(3)
+                    ? `${toHHMMSS(
+                          route["timeDifference"][vehicle.name]
                       )}`
                     : "-";
             },

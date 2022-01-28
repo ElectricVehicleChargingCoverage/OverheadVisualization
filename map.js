@@ -67,19 +67,20 @@ function showRoutesFrom(startCity) {
     const routes = getRoutesOfCity(startCity);
     getOverheadScores(routes);
     routeLayer.clearLayers(); // Remove previously shown routes
-    minmax = analyzeAttribute(routes, "timeoverhead");
+    minmax = analyzeAttribute(routes, attributeToCompare);
     routes.forEach((route) => {
+        const score = route[attributeToCompare]["average"];
         const latlngs = [
             [route["start_lat"], route["start_long"]],
             [route["dest_lat"], route["dest_long"]],
         ];
-        const color = getColor(minmax, route["timeoverhead"]["average"]);
+        const color = getColor(minmax, score);
         var polyline = L.polyline(latlngs, { color, opacity: 0.7 });
-        polyline.bindTooltip(`${route["timeoverhead"]["average"].toFixed(3)}`);
+        polyline.bindTooltip(
+            `${score.toFixed(3)}`
+        );
         polyline.bindPopup(
-            `<h2> ${route.Start} -> ${route.Ziel} (Score: ${route[
-                "timeoverhead"
-            ]["average"].toFixed(3)})</h2> ${createRouteInfoTable(route)}
+            `<h2> ${route.Start} -> ${route.Ziel} (Score: ${score.toFixed(3)})</h2> ${createRouteInfoTable(route)}
             <a href="javascript:void(0)" onclick="calculateRoutes(${latlngs})"> Calculate routes </a>`,
             { maxWidth: "600", className: "route-popup" }
         );
