@@ -78,8 +78,10 @@ function createRouteInfoTable(route) {
             method: (vehicle, route) => {
                 return route["distanceDifference"][vehicle.name]
                     ? `${parseFloat(
-                          route["distanceDifference"][vehicle.name].toFixed(3)
-                      )}`
+                          (
+                              route["distanceDifference"][vehicle.name] / 1000
+                          ).toFixed(3)
+                      )} km`
                     : "-";
             },
         },
@@ -165,7 +167,7 @@ function createRouteInfoTable(route) {
         table += `<tr> <td> ${attribute.display} </td>`;
         route.Fahrzeuge.forEach((fahrzeug) => {
             table += `<td> ${
-                attribute.method(fahrzeug, route)
+                fahrzeug.strecke ? attribute.method(fahrzeug, route) : "-"
             } </td>`;
         });
         table += "</tr> ";
@@ -452,12 +454,15 @@ function calculateCityScores() {
         attributes.forEach((attribute) => {
             city[attribute.name] = {};
             sum = 0;
+            count = 0;
             Vehicles.forEach((vehicle) => {
                 city[attribute.name][vehicle] = attribute.method(city, vehicle);
-                if (vehicle == "Verbrenner") return;
+                if (vehicle == "Verbrenner" || city[attribute.name][vehicle] == 0)
+                    return;
                 sum += city[attribute.name][vehicle];
+                count += 1;
             });
-            city[attribute.name]["average"] = sum / 3;
+            city[attribute.name]["average"] = sum / count;
         });
     });
 }
@@ -475,17 +480,24 @@ function calculateRouteScores() {
             route[`${attribute.new}Difference`] = {};
             sumFactor = 0;
             sumDifference = 0;
+            count = 0;
             route.Fahrzeuge.forEach((fahrzeug) => {
+                if (fahrzeug.strecke == null) return;
                 const combustionAttribute = route.Fahrzeuge[0][attribute.name];
                 const vehicleAttribute = fahrzeug[attribute.name];
-                sumFactor += route[`${attribute.new}Factor`][fahrzeug.name] =
+                route[`${attribute.new}Factor`][fahrzeug.name] =
                     vehicleAttribute / combustionAttribute;
-                sumDifference += route[`${attribute.new}Difference`][
-                    fahrzeug.name
-                ] = vehicleAttribute - combustionAttribute;
+                route[`${attribute.new}Difference`][fahrzeug.name] =
+                    vehicleAttribute - combustionAttribute;
+                if (fahrzeug.name == "Verbrenner") return;
+                sumFactor += route[`${attribute.new}Factor`][fahrzeug.name];
+                sumDifference +=
+                    route[`${attribute.new}Difference`][fahrzeug.name];
+                count += 1;
             });
-            route[`${attribute.new}Factor`]["average"] = (sumFactor - 1) / 3;
-            route[`${attribute.new}Difference`]["average"] = sumDifference / 3;
+            route[`${attribute.new}Factor`]["average"] = sumFactor / count;
+            route[`${attribute.new}Difference`]["average"] =
+                sumDifference / count;
         });
     });
 }

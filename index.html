@@ -46,6 +46,11 @@
         <h2> Constants </h2>
         <label for="minRouteDistanceInput">Minimum distance in km between cities:</label>
         <input type="number" id="minRouteDistanceInput" name="minRouteDistance" placeholder="Minimum distance between cities" step="1">
+        <label for="attributeToCompareInput">Minimum distance in km between cities:</label>
+        <select name="attributeToCompare" id="attributeToCompareInput">
+            <option value="timeFactor">Time factor</option>
+            <option value="distanceFactor">Distance factor</option>
+        </select>
         <input type="submit" value="Save">
     </form>
 </div>
@@ -70,6 +75,7 @@
     var gasConsumption = 7.3; // liter per 100 km
     var kWhPrice = 0.3; // price per kWh
     var minRouteDistance = 100;
+    var attributeToCompare = "distanceFactor";
 
     function saveAPIKey(e) {
         e.preventDefault();
@@ -126,6 +132,8 @@
     try {
         minRouteDistance = localStorage.getItem("minRouteDistance") ? localStorage.getItem("minRouteDistance") : minRouteDistance;
         $("#minRouteDistanceInput").val(minRouteDistance);
+        attributeToCompare = localStorage.getItem("attributeToCompare") ? localStorage.getItem("attributeToCompare") : attributeToCompare;
+        $("#attributeToCompareInput").val(attributeToCompare);
     }
     catch (e) {
         console.warn(e);
@@ -135,6 +143,8 @@
         // e.preventDefault(); // This will prevent the page from reloading
         minRouteDistance = $("#minRouteDistanceInput").val();
         localStorage.setItem("minRouteDistance", minRouteDistance);
+        attributeToCompare = $("#attributeToCompareInput").val();
+        localStorage.setItem("attributeToCompare", attributeToCompare);
     }
 </script>
 
