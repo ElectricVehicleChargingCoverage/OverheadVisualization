@@ -1,5 +1,3 @@
-const MIN_ROUTE_DISTANCE = 0;
-
 function toHHMMSS(secs) {
     var sec_num = parseInt(secs, 10);
     var hours = Math.floor(sec_num / 3600);

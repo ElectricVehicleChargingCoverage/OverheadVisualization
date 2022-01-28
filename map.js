@@ -41,7 +41,7 @@ map.on("click", onMapClick);
 
 // Visualize cityData:
 
-const cityMinMax = analyzeAttribute(cityData, ["Zeitfaktor"]);
+const cityMinMax = analyzeAttribute(cityData, ["Zeitfaktor"]); // TODO: Don`t use this anymore!
 cityData.forEach((city) => {
     const radius = 5000 * Math.pow(city.Zeitfaktor, 5);
     const color = getColor(cityMinMax, city["Zeitfaktor"]);
@@ -54,10 +54,6 @@ cityData.forEach((city) => {
     circle.bindPopup(
         `<h2>${city.name}</h2>
         ${createCityInfoTable(city)} `,
-        // Zeitfaktor: ${city.Zeitfaktor.toFixed(2)} <br />
-        // Zeitunterschied: ${toHHMMSS(city.Zeitunterschied)} <br />
-        // Distanzfaktor: ${city.Distanzfaktor.toFixed(4)} <br />
-        // Umweg: ${(city.Umweg / 1000).toFixed(2)} km`
         { maxWidth: "600", className: "city-popup" }
     );
     circle.on("click", (e) => showRoutesFrom(city.name));
