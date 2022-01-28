@@ -21,7 +21,7 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
         >&times;</a
     >
-    <form onsubmit="saveAPIKey(event)">
+    <form onsubmit="saveAPIKey(event)" title="This data is required for calculating routes on demand.">
         <label for="apiKeyInput">TomTom API-Key:</label>
         <input type="text" id="apiKeyInput" name="APIKey" placeholder="Your API-Key">
         <label for="vehicleDataInput">Vehicle Data (Array):</label>
@@ -30,7 +30,7 @@
     </form>
 
 
-    <form onsubmit="applyCostData(event)">
+    <form onsubmit="applyCostData(event)" title="This data is required for a cost model.">
         <h2> Combustion </h2>
         <label for="gasPriceInput">Price per liter:</label>
         <input type="number" id="gasPriceInput" name="gasPrice" placeholder="Gas price" step="0.001">
@@ -47,7 +47,7 @@
     <div id="map"></div>
 </div>
 
-<h1 onclick="openNav()"><span>Visualization</span></h1>
+<h1 onclick="openNav()" title="Click here to open sidebar"><span>Visualization</span></h1>
 
 <script>
     function openNav() {
@@ -106,7 +106,7 @@
     }
 
     function applyCostData(e) {
-        e.preventDefault();
+        // e.preventDefault(); // This will prevent the page from reloading
         gasPrice = $("#gasPriceInput").val();
         localStorage.setItem("gasPrice", gasPrice);
         gasConsumption = $("#gasConsumptionInput").val();
