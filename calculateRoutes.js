@@ -7,6 +7,10 @@ function calculateRoutes(start_lat, start_long, dest_lat, dest_long) {
     const coordinates = `${start_lat},${start_long}:${dest_lat},${dest_long}`;
     const key = localStorage.getItem("API-Key");
     if (key.match("[a-zA-Z0-9]{30,35}")) {
+        if (vehicleData.length == 0) {
+            window.alert("Please enter vehicleData suitable for routing to use this feature.");
+            return;
+        }
         calculateCombustionRoute(coordinates, key);
         calculateEVRoutes(coordinates, key);
     } else if (key == ""){
