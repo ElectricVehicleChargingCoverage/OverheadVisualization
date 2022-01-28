@@ -53,6 +53,7 @@
         </select>
         <input type="submit" value="Save">
     </form>
+    <button onclick="resetLocalStorage()" style="background-color: red;"> Reset Settings </button>
 </div>
 
 <div id="main">
@@ -145,6 +146,11 @@
         localStorage.setItem("minRouteDistance", minRouteDistance);
         attributeToCompare = $("#attributeToCompareInput").val();
         localStorage.setItem("attributeToCompare", attributeToCompare);
+    }
+
+    function resetLocalStorage() {
+        localStorage.clear();
+        console.warn("You cleared the local storage. Reload page to get default values.");
     }
 </script>
 

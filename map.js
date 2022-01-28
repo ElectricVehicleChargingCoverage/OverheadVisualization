@@ -46,7 +46,7 @@ calculateCityScores();
 
 const cityMinMax = analyzeAttribute(cityData, attributeToCompare);
 cityData.forEach((city) => {
-    const radius = 3000 * Math.pow(city.timeFactor.average, 5);
+    const radius = cityCircleSize(city);
     const color = getColor(cityMinMax, city[attributeToCompare]["average"]);
     const circle = L.circle([city.lat, city.long], {
         radius,

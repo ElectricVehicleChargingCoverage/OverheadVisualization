@@ -314,7 +314,7 @@ function compareVehicleScoresForCity(
         return route[`${attribute}${get_difference ? "Difference" : "Factor"}`][
             vehicle
         ];
-    });
+    }).filter((value) => value != undefined);
     const sum = mapped.reduce((a, b) => a + b, 0);
     const avg = sum / mapped.length || 0;
     return avg;
@@ -500,4 +500,15 @@ function calculateRouteScores() {
                 sumDifference / count;
         });
     });
+}
+
+function cityCircleSize(city) {
+    const score = city[attributeToCompare]["average"];
+    switch (attributeToCompare) {
+        case "timeFactor":
+            return 3000 * Math.pow(score, 5);
+        case "distanceFactor":
+            return 12000 * Math.pow(((score-1) * 5) + 1, 9);
+    }
+    return 10000;
 }
