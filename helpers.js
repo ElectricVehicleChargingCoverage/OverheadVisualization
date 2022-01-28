@@ -57,42 +57,42 @@ function createRouteInfoTable(route) {
     const attributes = [
         {
             name: "strecke",
-            display: "Strecke",
+            display: "Distance",
             method: (e) => {
                 return e ? `${(e / 1000).toFixed(0)} km` : "-";
             },
         },
         {
             name: "dauer",
-            display: "Dauer",
+            display: "Duration",
             method: (e) => {
                 return e ? toHHMMSS(e) : "-";
             },
         },
         {
             name: "verbrauch",
-            display: "Verbrauch",
+            display: "Consumption",
             method: (e) => {
                 return e ? `${e.toFixed(2)} kWh` : "-";
             },
         },
         {
             name: "restreichweite",
-            display: "Batteriestand",
+            display: "Battery on dest",
             method: (e) => {
                 return e ? `${e.toFixed(1)} kWh` : "-";
             },
         },
         {
             name: "ladezeit",
-            display: "Ladezeit",
+            display: "Charging time",
             method: (e) => {
                 return e ? toHHMMSS(e) : "-";
             },
         },
         {
             name: "legs",
-            display: "Ladestops",
+            display: "Charing stops",
             method: (e) => {
                 return e ? (e.length > 0 ? e.length - 1 : "-") : "-";
             },
@@ -100,7 +100,7 @@ function createRouteInfoTable(route) {
     ];
     var table = `<table> <tr>
             <th> </th>
-            <th>Verbrenner</th>
+            <th>Combustion</th>
             <th>Audi E-Tron</th>
             <th>Peugeot e208</th>
             <th>Fiat 500e</th>
@@ -229,20 +229,24 @@ function createCityInfoTable(city) {
             name: "strecke",
             display: "Detour",
             method: (a, b) => {
-                return `${compareVehicleScoresForCity(a, b, "strecke", true).toFixed(0)/1000} km`;
+                return `${
+                    compareVehicleScoresForCity(a, b, "strecke", true).toFixed(
+                        0
+                    ) / 1000
+                } km`;
             },
         },
         {
             name: "strecke",
-            display: "Detour",
+            display: "Costs",
             method: (a, b) => {
-                return `${compareVehicleScoresForCity(a, b, "strecke", true).toFixed(0)/1000} km`;
+                return `${getCostsForCity(a, b).toFixed(2)} euro`;
             },
         },
     ];
     var table = `<table> <tr>
-            <th> </th>
-            <th>Verbrenner</th>
+            <th>Averages</th>
+            <th>Combustion</th>
             <th>Audi E-Tron</th>
             <th>Peugeot e208</th>
             <th>Fiat 500e</th>
@@ -258,17 +262,22 @@ function createCityInfoTable(city) {
     return table;
 }
 
-function compareVehicleScoresForCity(city, vehicle, attribute, get_difference = true) {
+function compareVehicleScoresForCity(
+    city,
+    vehicle,
+    attribute,
+    get_difference = true
+) {
     const routes = getRoutesOfCity(city.name);
-    const mapped = routes.map(route => {
+    const mapped = routes.map((route) => {
         const vehicleAttribute = route.Fahrzeuge.filter((fahrzeug) => {
             return fahrzeug.name == vehicle;
         })[0][attribute];
-        const combustionAttribute = route.Fahrzeuge[0][attribute]
+        const combustionAttribute = route.Fahrzeuge[0][attribute];
         return get_difference
             ? vehicleAttribute - combustionAttribute
             : vehicleAttribute / combustionAttribute;
-    })
+    });
     const sum = mapped.reduce((a, b) => a + b, 0);
     const avg = sum / mapped.length || 0;
     return avg;
@@ -276,6 +285,21 @@ function compareVehicleScoresForCity(city, vehicle, attribute, get_difference = 
 
 function getCostsForCity(city, vehicle) {
     const routes = getRoutesOfCity(city.name);
+    if (vehicle == "Verbrenner") {
+        const mapped = routes.map((route) => route.Fahrzeuge[0]["strecke"]);
+        const sum = mapped.reduce((a, b) => a + b, 0);
+        const avg = sum / mapped.length || 0;
+        return ((avg * gasConsumption) / 100000) * gasPrice;
+    } else {
+        const mapped = routes.map((route) => {
+            return route.Fahrzeuge.filter((fahrzeug) => {
+                return fahrzeug.name == vehicle;
+            })[0]["verbrauch"];
+        });
+        const sum = mapped.reduce((a, b) => a + b, 0);
+        const avg = sum / mapped.length || 0;
+        return avg * kWhPrice;
+    }
 }
 
 function getRoutesOfCity(cityname) {

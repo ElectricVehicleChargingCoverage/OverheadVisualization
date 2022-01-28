@@ -49,12 +49,6 @@
 
 <h1 onclick="openNav()"><span>Visualization</span></h1>
 
-<script src="helpers.js"></script>
-<script src="data/cityData.js"></script>
-<script src="data/routeData.js"></script>
-<script src="map.js"></script>
-<script src="calculateRoutes.js"></script>
-
 <script>
     function openNav() {
         document.getElementById("sidebar").style.width = "400px";
@@ -65,9 +59,9 @@
     }
 
     var vehicleData = [];
-    var gasPrice = 0;
-    var gasConsumption = 0;
-    var kWhPrice = 0;
+    var gasPrice = 1.74; // price per liter
+    var gasConsumption = 7.3; // liter per 100 km
+    var kWhPrice = 0.3; // price per kWh
 
     function saveAPIKey(e) {
         e.preventDefault();
@@ -85,6 +79,7 @@
         }
     }
 
+    // Load api key and vehicleData
     try {
         $("#apiKeyInput").val(localStorage.getItem("API-Key"));
         $("#vehicleDataInput").val(localStorage.getItem("vehicleData"));
@@ -97,11 +92,32 @@
         console.warn(e);
     }
 
+    // Load price data
+    try {
+        gasPrice = localStorage.getItem("gasPrice") ? localStorage.getItem("gasPrice") : gasPrice;
+        $("#gasPriceInput").val(gasPrice);
+        gasConsumption = localStorage.getItem("gasConsumption") ? localStorage.getItem("gasConsumption") : gasConsumption;
+        $("#gasConsumptionInput").val(gasConsumption);
+        kWhPrice = localStorage.getItem("kWhPrice") ? localStorage.getItem("kWhPrice") : kWhPrice;
+        $("#pricekWhInput").val(kWhPrice);
+    }
+    catch (e) {
+        console.warn(e);
+    }
+
     function applyCostData(e) {
         e.preventDefault();
         gasPrice = $("#gasPriceInput").val();
+        localStorage.setItem("gasPrice", gasPrice);
         gasConsumption = $("#gasConsumptionInput").val();
+        localStorage.setItem("gasConsumption", gasConsumption);
         kWhPrice = $("#pricekWhInput").val();
-        console.log(gasPrice, gasConsumption, kWhPrice);
+        localStorage.setItem("kWhPrice", kWhPrice);
     }
 </script>
+
+<script src="helpers.js"></script>
+<script src="data/cityData.js"></script>
+<script src="data/routeData.js"></script>
+<script src="map.js"></script>
+<script src="calculateRoutes.js"></script>
