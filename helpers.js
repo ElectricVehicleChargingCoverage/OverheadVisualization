@@ -284,6 +284,13 @@ function createCityInfoTable(city) {
                 return `${city["costs"][vehicle].toFixed(2)} &euro;`;
             },
         },
+        {
+            display: "Number of routes",
+            method: (city, vehicle) => {
+                const routes = getRoutesOfCity(city.name).filter((r) => {return r.distanceFactor[vehicle] != null});
+                return `${routes.length}`;
+            },
+        },
     ];
     var table = `<table> <tr>
             <th>Averages</th>

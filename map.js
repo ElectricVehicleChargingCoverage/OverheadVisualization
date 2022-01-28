@@ -46,8 +46,9 @@ calculateCityScores();
 
 const cityMinMax = analyzeAttribute(cityData, attributeToCompare);
 cityData.forEach((city) => {
+    const score = city[attributeToCompare]["average"];
     const radius = cityCircleSize(city);
-    const color = getColor(cityMinMax, city[attributeToCompare]["average"]);
+    const color = getColor(cityMinMax, score);
     const circle = L.circle([city.lat, city.long], {
         radius,
         color,
@@ -55,7 +56,7 @@ cityData.forEach((city) => {
         stroke: false,
     });
     circle.bindPopup(
-        `<h2>${city.name}</h2>
+        `<h2>${city.name} (Score: ${score.toFixed(3)}) </h2>
         ${createCityInfoTable(city)} `,
         { maxWidth: "600", className: "city-popup" }
     );
