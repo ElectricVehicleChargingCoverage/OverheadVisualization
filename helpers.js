@@ -56,54 +56,101 @@ function getColor(minmax, value) {
 function createRouteInfoTable(route) {
     const attributes = [
         {
-            name: "strecke",
             display: "Distance",
-            method: (e) => {
-                return e ? `${(e / 1000).toFixed(0)} km` : "-";
-            },
-        },
-        {
-            name: "dauer",
-            display: "Duration",
-            method: (e) => {
-                return e ? toHHMMSS(e) : "-";
-            },
-        },
-        {
-            name: "verbrauch",
-            display: "Consumption",
-            method: (e, v) => {
-                return e
-                    ? `${e.toFixed(2)} ${v == "Verbrenner" ? "l" : "kWh"}`
+            method: (vehicle) => {
+                return vehicle["strecke"]
+                    ? `${(vehicle["strecke"] / 1000).toFixed(0)} km`
                     : "-";
             },
         },
         {
-            name: "restreichweite",
+            display: "Distance factor",
+            method: (vehicle, route) => {
+                return route["distanceFactor"][vehicle.name]
+                    ? `${parseFloat(
+                          route["distanceFactor"][vehicle.name].toFixed(3)
+                      )}`
+                    : "-";
+            },
+        },
+        {
+            display: "Distance difference",
+            method: (vehicle, route) => {
+                return route["distanceDifference"][vehicle.name]
+                    ? `${parseFloat(
+                          route["distanceDifference"][vehicle.name].toFixed(3)
+                      )}`
+                    : "-";
+            },
+        },
+        {
+            display: "Duration",
+            method: (vehicle) => {
+                return vehicle["dauer"] ? toHHMMSS(vehicle["dauer"]) : "-";
+            },
+        },
+        {
+            display: "Time factor",
+            method: (vehicle, route) => {
+                return route["timeFactor"][vehicle.name]
+                    ? `${parseFloat(
+                          route["timeFactor"][vehicle.name].toFixed(3)
+                      )}`
+                    : "-";
+            },
+        },
+        {
+            display: "Time difference",
+            method: (vehicle, route) => {
+                return route["timeDifference"][vehicle.name]
+                    ? `${parseFloat(
+                          route["timeDifference"][vehicle.name].toFixed(3)
+                      )}`
+                    : "-";
+            },
+        },
+        {
+            display: "Consumption",
+            method: (vehicle) => {
+                return vehicle["verbrauch"]
+                    ? `${vehicle["verbrauch"].toFixed(2)} ${
+                          vehicle.name == "Verbrenner" ? "l" : "kWh"
+                      }`
+                    : "-";
+            },
+        },
+        {
             display: "Remaining charge",
-            method: (e) => {
-                return e ? `${e.toFixed(1)} kWh` : "-";
+            method: (vehicle) => {
+                return vehicle["restreichweite"]
+                    ? `${vehicle["restreichweite"].toFixed(1)} kWh`
+                    : "-";
             },
         },
         {
-            name: "ladezeit",
             display: "Charging time",
-            method: (e) => {
-                return e ? toHHMMSS(e) : "-";
+            method: (vehicle) => {
+                return vehicle["ladezeit"]
+                    ? toHHMMSS(vehicle["ladezeit"])
+                    : "-";
             },
         },
         {
-            name: "legs",
             display: "Charging stops",
-            method: (e) => {
-                return e ? (e.length > 0 ? e.length - 1 : "-") : "-";
+            method: (vehicle) => {
+                return vehicle["legs"]
+                    ? vehicle["legs"].length > 0
+                        ? vehicle["legs"].length - 1
+                        : "-"
+                    : "-";
             },
         },
         {
-            name: "costs",
             display: "Costs",
-            method: (e) => {
-                return e ? `${e.toFixed(2)} &euro;` : "-";
+            method: (vehicle) => {
+                return vehicle["costs"]
+                    ? `${vehicle["costs"].toFixed(2)} &euro;`
+                    : "-";
             },
         },
     ];
@@ -118,9 +165,7 @@ function createRouteInfoTable(route) {
         table += `<tr> <td> ${attribute.display} </td>`;
         route.Fahrzeuge.forEach((fahrzeug) => {
             table += `<td> ${
-                attribute.method
-                    ? attribute.method(fahrzeug[attribute.name], fahrzeug.name)
-                    : fahrzeug[attribute.name]
+                attribute.method(fahrzeug, route)
             } </td>`;
         });
         table += "</tr> ";
