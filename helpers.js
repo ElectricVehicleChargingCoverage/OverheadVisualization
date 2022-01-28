@@ -1,3 +1,5 @@
+const MIN_ROUTE_DISTANCE = 0;
+
 function toHHMMSS(secs) {
     var sec_num = parseInt(secs, 10);
     var hours = Math.floor(sec_num / 3600);
@@ -191,6 +193,94 @@ function createChargerInfoTable(chargerInfo) {
     return table;
 }
 
+function createCityInfoTable(city) {
+    const Vehicles = ["Verbrenner", "Audi E-Tron", "Peugeot e208", "Fiat 500e"];
+    const attributes = [
+        {
+            name: "dauer",
+            display: "Timefactor",
+            get_difference: false,
+            method: (a, b, c, d) => {
+                return parseFloat(compareVehicleScoresForCity(a, b, c, d).toFixed(3));
+            },
+        },
+        {
+            name: "dauer",
+            display: "Timedifference",
+            get_difference: true,
+            method: (a, b, c, d) => {
+                return toHHMMSS(compareVehicleScoresForCity(a, b, c, d));
+            },
+        },
+        {
+            name: "strecke",
+            display: "Distance-factor",
+            get_difference: false,
+            method: (a, b, c, d) => {
+                return parseFloat(compareVehicleScoresForCity(a, b, c, d).toFixed(3));
+            },
+        },
+        {
+            name: "strecke",
+            display: "Detour",
+            get_difference: true,
+            method: (a, b, c, d) => {
+                return `${compareVehicleScoresForCity(a, b, c, d).toFixed(0)/1000} km`;
+            },
+        },
+    ];
+    var table = `<table> <tr>
+            <th> </th>
+            <th>Verbrenner</th>
+            <th>Audi E-Tron</th>
+            <th>Peugeot e208</th>
+            <th>Fiat 500e</th>
+        </tr>`;
+    attributes.forEach((attribute) => {
+        table += `<tr> <td> ${attribute.display} </td>`;
+        Vehicles.forEach((vehicle) => {
+            table += `<td> ${attribute.method(city, vehicle, attribute.name, attribute.get_difference)} </td>`;
+        });
+        table += "</tr> ";
+    });
+    table += "</table> ";
+    return table;
+}
+
+function compareVehicleScoresForCity(city, vehicle, attribute, get_difference = true) {
+    const routes = getRoutesOfCity(city.name);
+    const mapped = routes.map(route => {
+        const vehicleAttribute = route.Fahrzeuge.filter((fahrzeug) => {
+            return fahrzeug.name == vehicle;
+        })[0][attribute];
+        const combustionAttribute = route.Fahrzeuge[0][attribute]
+        return get_difference
+            ? vehicleAttribute - combustionAttribute
+            : vehicleAttribute / combustionAttribute;
+    })
+    const sum = mapped.reduce((a, b) => a + b, 0);
+    const avg = sum / mapped.length || 0;
+    return avg;
+}
+
+function getRoutesOfCity(cityname) {
+    return routeData.filter(
+        (route) =>
+            route.Start == cityname &&
+            getDistance(
+                [route["start_lat"], route["start_long"]],
+                [route["dest_lat"], route["dest_long"]]
+            ) >= MIN_ROUTE_DISTANCE
+    );
+}
+
+function getDistance(latlng1, latlng2) {
+    const dy = 111.3 * (latlng1[0] - latlng2[0]);
+    const dx = 71.5 * (latlng1[1] - latlng2[1]);
+    distance = Math.sqrt(dx * dx + dy * dy);
+    return distance; // in km
+}
+
 function shortVehicleName(name) {
     return name.split(" ")[0];
 }
@@ -220,7 +310,6 @@ function httpPostAsync(theUrl, body, callback, callbackInfo = null) {
     xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlHttp.send(body);
 }
-
 
 function getPopupFromSummary(summary, vehicleInfo) {
     var result = `<h2> ${vehicleInfo.name} </h2>

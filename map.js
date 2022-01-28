@@ -53,10 +53,12 @@ cityData.forEach((city) => {
     });
     circle.bindPopup(
         `<h2>${city.name}</h2>
-        Zeitfaktor: ${city.Zeitfaktor.toFixed(2)} <br />
-        Zeitunterschied: ${toHHMMSS(city.Zeitunterschied)} <br />
-        Distanzfaktor: ${city.Distanzfaktor.toFixed(4)} <br />
-        Umweg: ${(city.Umweg / 1000).toFixed(2)} km`
+        ${createCityInfoTable(city)} `,
+        // Zeitfaktor: ${city.Zeitfaktor.toFixed(2)} <br />
+        // Zeitunterschied: ${toHHMMSS(city.Zeitunterschied)} <br />
+        // Distanzfaktor: ${city.Distanzfaktor.toFixed(4)} <br />
+        // Umweg: ${(city.Umweg / 1000).toFixed(2)} km`
+        { maxWidth: "600", className: "city-popup" }
     );
     circle.on("click", (e) => showRoutesFrom(city.name));
     circle.addTo(map);
