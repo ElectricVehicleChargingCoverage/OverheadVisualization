@@ -15,7 +15,7 @@ var overlayMaps = {
     "Audi E-Tron": audiLayer,
     "Peugeot e208": peugeotLayer,
     "Fiat 500e": fiatLayer,
-    "Verbrenner": combustionLayer,
+    Verbrenner: combustionLayer,
 };
 L.control.layers({}, overlayMaps).addTo(map);
 
@@ -41,10 +41,13 @@ map.on("click", onMapClick);
 
 // Visualize cityData:
 
-const cityMinMax = analyzeAttribute(cityData, ["Zeitfaktor"]); // TODO: Don`t use this anymore!
+calculateRouteScores();
+calculateCityScores();
+
+const cityMinMax = analyzeAttribute(cityData, "timeFactor");
 cityData.forEach((city) => {
-    const radius = 5000 * Math.pow(city.Zeitfaktor, 5);
-    const color = getColor(cityMinMax, city["Zeitfaktor"]);
+    const radius = 5000 * Math.pow(city.timeFactor.average, 5);
+    const color = getColor(cityMinMax, city["timeFactor"]["average"]);
     const circle = L.circle([city.lat, city.long], {
         radius,
         color,
@@ -70,14 +73,14 @@ function showRoutesFrom(startCity) {
             [route["start_lat"], route["start_long"]],
             [route["dest_lat"], route["dest_long"]],
         ];
-        const color = getColor(minmax, route["timeoverhead"]);
+        const color = getColor(minmax, route["timeoverhead"]["average"]);
         var polyline = L.polyline(latlngs, { color, opacity: 0.7 });
-        polyline.bindTooltip(`${route["timeoverhead"].toFixed(3)}`);
+        polyline.bindTooltip(`${route["timeoverhead"]["average"].toFixed(3)}`);
         polyline.bindPopup(
             `<h2> ${route.Start} -> ${route.Ziel} (Score: ${route[
                 "timeoverhead"
-            ].toFixed(3)})</h2> ${createRouteInfoTable(route)}
-            <a href="javascript:void(0)" title="Not implemented yet" onclick="calculateRoutes(${latlngs})"> Calculate routes </a>`,
+            ]["average"].toFixed(3)})</h2> ${createRouteInfoTable(route)}
+            <a href="javascript:void(0)" onclick="calculateRoutes(${latlngs})"> Calculate routes </a>`,
             { maxWidth: "600", className: "route-popup" }
         );
         polyline.addTo(routeLayer);
@@ -156,8 +159,8 @@ function displayRoute(latlngs, summary, vehicleInfo) {
         className: "route-popup",
     });
     polyline.bindTooltip(vehicleInfo.name);
-    const options = { opacity: 0.75};
-    switch(shortVehicleName(vehicleInfo.name)) {
+    const options = { opacity: 0.75 };
+    switch (shortVehicleName(vehicleInfo.name)) {
         case "Combustion":
             options.color = "#0000ff";
             options.weight = 5;
@@ -176,6 +179,6 @@ function displayRoute(latlngs, summary, vehicleInfo) {
             options.color = "#569937";
             polyline.addTo(fiatLayer);
             break;
-    };
+    }
     polyline.setStyle(options);
 }

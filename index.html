@@ -41,6 +41,13 @@
         <input type="number" id="pricekWhInput" name="pricekWh" placeholder="price" step="0.001">
         <input type="submit" value="Save">
     </form>
+
+    <form onsubmit="changeConstants(event)" title="Change constants of the website.">
+        <h2> Constants </h2>
+        <label for="minRouteDistanceInput">Minimum distance in km between cities:</label>
+        <input type="number" id="minRouteDistanceInput" name="minRouteDistance" placeholder="Minimum distance between cities" step="1">
+        <input type="submit" value="Save">
+    </form>
 </div>
 
 <div id="main">
@@ -62,7 +69,7 @@
     var gasPrice = 1.74; // price per liter
     var gasConsumption = 7.3; // liter per 100 km
     var kWhPrice = 0.3; // price per kWh
-    const MIN_ROUTE_DISTANCE = 0;
+    var minRouteDistance = 100;
 
     function saveAPIKey(e) {
         e.preventDefault();
@@ -114,6 +121,20 @@
         localStorage.setItem("gasConsumption", gasConsumption);
         kWhPrice = $("#pricekWhInput").val();
         localStorage.setItem("kWhPrice", kWhPrice);
+    }
+
+    try {
+        minRouteDistance = localStorage.getItem("minRouteDistance") ? localStorage.getItem("minRouteDistance") : minRouteDistance;
+        $("#minRouteDistanceInput").val(minRouteDistance);
+    }
+    catch (e) {
+        console.warn(e);
+    }
+
+    function changeConstants(e) {
+        // e.preventDefault(); // This will prevent the page from reloading
+        minRouteDistance = $("#minRouteDistanceInput").val();
+        localStorage.setItem("minRouteDistance", minRouteDistance);
     }
 </script>
 

@@ -12,7 +12,7 @@ function toHHMMSS(secs) {
 
 function analyzeAttribute(data, attribute) {
     reducedData = data.map(function (item) {
-        return item[attribute];
+        return item[attribute]["average"];
     });
     return {
         min: Math.min.apply(null, reducedData),
@@ -31,8 +31,10 @@ function getOverheadScores(routes) {
                 Fahrzeuge[2].strecke +
                 Fahrzeuge[3].strecke) /
             (3 * Fahrzeuge[0].strecke);
-        route["timeoverhead"] = timeoverhead;
-        route["umweg"] = umweg;
+        route["timeoverhead"] = {};
+        route["timeoverhead"]["average"] = timeoverhead;
+        route["umweg"] = {};
+        route["umweg"]["average"] = umweg;
     });
 }
 
@@ -197,48 +199,36 @@ function createCityInfoTable(city) {
         {
             name: "dauer",
             display: "Timefactor",
-            method: (a, b) => {
-                return parseFloat(
-                    compareVehicleScoresForCity(a, b, "dauer", false).toFixed(3)
-                );
+            method: (city, vehicle) => {
+                return parseFloat(city["timeFactor"][vehicle].toFixed(3));
             },
         },
         {
             name: "dauer",
             display: "Timedifference",
-            method: (a, b) => {
-                return toHHMMSS(
-                    compareVehicleScoresForCity(a, b, "dauer", true)
-                );
+            method: (city, vehicle) => {
+                return toHHMMSS(city["timeDifference"][vehicle]);
             },
         },
         {
             name: "strecke",
             display: "Distance-factor",
-            method: (a, b) => {
-                return parseFloat(
-                    compareVehicleScoresForCity(a, b, "strecke", false).toFixed(
-                        3
-                    )
-                );
+            method: (city, vehicle) => {
+                return parseFloat(city["distanceFactor"][vehicle].toFixed(3));
             },
         },
         {
             name: "strecke",
             display: "Detour",
-            method: (a, b) => {
-                return `${
-                    compareVehicleScoresForCity(a, b, "strecke", true).toFixed(
-                        0
-                    ) / 1000
-                } km`;
+            method: (city, vehicle) => {
+                return `${city["distanceDifference"][vehicle].toFixed(0) / 1000} km`;
             },
         },
         {
             name: "strecke",
             display: "Costs",
-            method: (a, b) => {
-                return `${getCostsForCity(a, b).toFixed(2)} euro`;
+            method: (city, vehicle) => {
+                return `${city["costs"][vehicle].toFixed(2)} euro`;
             },
         },
     ];
@@ -268,13 +258,9 @@ function compareVehicleScoresForCity(
 ) {
     const routes = getRoutesOfCity(city.name);
     const mapped = routes.map((route) => {
-        const vehicleAttribute = route.Fahrzeuge.filter((fahrzeug) => {
-            return fahrzeug.name == vehicle;
-        })[0][attribute];
-        const combustionAttribute = route.Fahrzeuge[0][attribute];
-        return get_difference
-            ? vehicleAttribute - combustionAttribute
-            : vehicleAttribute / combustionAttribute;
+        return route[`${attribute}${get_difference ? "Difference" : "Factor"}`][
+            vehicle
+        ];
     });
     const sum = mapped.reduce((a, b) => a + b, 0);
     const avg = sum / mapped.length || 0;
@@ -307,7 +293,7 @@ function getRoutesOfCity(cityname) {
             getDistance(
                 [route["start_lat"], route["start_long"]],
                 [route["dest_lat"], route["dest_long"]]
-            ) >= MIN_ROUTE_DISTANCE
+            ) >= minRouteDistance
     );
 }
 
@@ -357,4 +343,81 @@ function getPopupFromSummary(summary, vehicleInfo) {
     });
     result += "</table>";
     return result;
+}
+
+function calculateCityScores() {
+    const Vehicles = ["Verbrenner", "Audi E-Tron", "Peugeot e208", "Fiat 500e"];
+    attributes = [
+        {
+            name: "timeFactor",
+            method: (a, b) => {
+                return compareVehicleScoresForCity(a, b, "time", false);
+            },
+        },
+        {
+            name: "timeDifference",
+            method: (a, b) => {
+                return compareVehicleScoresForCity(a, b, "time", true);
+            },
+        },
+        {
+            name: "distanceFactor",
+            method: (a, b) => {
+                return compareVehicleScoresForCity(a, b, "distance", false);
+            },
+        },
+        {
+            name: "distanceDifference",
+            method: (a, b) => {
+                return compareVehicleScoresForCity(a, b, "distance", true);
+            },
+        },
+        {
+            name: "costs",
+            method: (a, b) => {
+                return getCostsForCity(a, b);
+            },
+        },
+    ];
+    cityData.forEach((city) => {
+        // const routes = getRoutesOfCity(city.name);
+        attributes.forEach((attribute) => {
+            city[attribute.name] = {};
+            sum = 0;
+            Vehicles.forEach((vehicle) => {
+                city[attribute.name][vehicle] = attribute.method(city, vehicle);
+                if (vehicle == "Verbrenner") return;
+                sum += city[attribute.name][vehicle];
+            });
+            city[attribute.name]["average"] = sum / 3;
+        });
+    });
+    console.log(cityData);
+}
+
+function calculateRouteScores() {
+    const attributes = [
+        { name: "strecke", new: "distance" },
+        { name: "dauer", new: "time" },
+    ];
+    const routes = routeData;
+    routes.forEach((route) => {
+        attributes.forEach((attribute) => {
+            route[`${attribute.new}Factor`] = {};
+            route[`${attribute.new}Difference`] = {};
+            sumFactor = 0;
+            sumDifference = 0;
+            route.Fahrzeuge.forEach((fahrzeug) => {
+                const combustionAttribute = route.Fahrzeuge[0][attribute.name];
+                const vehicleAttribute = fahrzeug[attribute.name];
+                sumFactor += route[`${attribute.new}Factor`][fahrzeug.name] =
+                    vehicleAttribute / combustionAttribute;
+                sumDifference += route[`${attribute.new}Difference`][
+                    fahrzeug.name
+                ] = vehicleAttribute - combustionAttribute;
+            });
+            route[`${attribute.new}Factor`]["average"] = (sumFactor - 1) / 3;
+            route[`${attribute.new}Difference`]["average"] = sumDifference / 3;
+        });
+    });
 }
