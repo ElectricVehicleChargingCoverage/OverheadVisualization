@@ -105,9 +105,7 @@ function createRouteInfoTable(route) {
             display: "Timedifference",
             method: (vehicle, route) => {
                 return route["timeDifference"][vehicle.name]
-                    ? `${toHHMMSS(
-                          route["timeDifference"][vehicle.name]
-                      )}`
+                    ? `${toHHMMSS(route["timeDifference"][vehicle.name])}`
                     : "-";
             },
         },
@@ -152,6 +150,14 @@ function createRouteInfoTable(route) {
             method: (vehicle) => {
                 return vehicle["costs"]
                     ? `${vehicle["costs"].toFixed(2)} &euro;`
+                    : "-";
+            },
+        },
+        {
+            display: "Costs factor",
+            method: (vehicle, route) => {
+                return route["costsFactor"][vehicle.name]
+                    ? `${parseFloat(route["costsFactor"][vehicle.name].toFixed(2))}`
                     : "-";
             },
         },
@@ -285,9 +291,17 @@ function createCityInfoTable(city) {
             },
         },
         {
+            display: "Cost factor",
+            method: (city, vehicle) => {
+                return `${parseFloat(city["costsFactor"][vehicle].toFixed(2))}`;
+            },
+        },
+        {
             display: "Number of routes",
             method: (city, vehicle) => {
-                const routes = getRoutesOfCity(city.name).filter((r) => {return r.distanceFactor[vehicle] != null});
+                const routes = getRoutesOfCity(city.name).filter((r) => {
+                    return r.distanceFactor[vehicle] != null;
+                });
                 return `${routes.length}`;
             },
         },
@@ -317,11 +331,13 @@ function compareVehicleScoresForCity(
     get_difference = true
 ) {
     const routes = getRoutesOfCity(city.name);
-    const mapped = routes.map((route) => {
-        return route[`${attribute}${get_difference ? "Difference" : "Factor"}`][
-            vehicle
-        ];
-    }).filter((value) => value != undefined);
+    const mapped = routes
+        .map((route) => {
+            return route[
+                `${attribute}${get_difference ? "Difference" : "Factor"}`
+            ][vehicle];
+        })
+        .filter((value) => value != undefined);
     const sum = mapped.reduce((a, b) => a + b, 0);
     const avg = sum / mapped.length || 0;
     return avg;
@@ -455,16 +471,24 @@ function calculateCityScores() {
                 return getCostsForCity(a, b);
             },
         },
+        {
+            name: "costsFactor",
+            method: (city, vehicle) => {
+                return city["costs"][vehicle] / city["costs"]["Verbrenner"];
+            },
+        },
     ];
     cityData.forEach((city) => {
-        // const routes = getRoutesOfCity(city.name);
         attributes.forEach((attribute) => {
             city[attribute.name] = {};
             sum = 0;
             count = 0;
             Vehicles.forEach((vehicle) => {
                 city[attribute.name][vehicle] = attribute.method(city, vehicle);
-                if (vehicle == "Verbrenner" || city[attribute.name][vehicle] == 0)
+                if (
+                    vehicle == "Verbrenner" ||
+                    city[attribute.name][vehicle] == 0
+                )
                     return;
                 sum += city[attribute.name][vehicle];
                 count += 1;
@@ -478,6 +502,7 @@ function calculateRouteScores() {
     const attributes = [
         { name: "strecke", new: "distance" },
         { name: "dauer", new: "time" },
+        { name: "costs", new: "costs"}
     ];
     const routes = routeData;
     getCostsForRoutes();
@@ -509,13 +534,33 @@ function calculateRouteScores() {
     });
 }
 
+function calculateGlobalScores() {
+    const attributes = [
+        "distance",
+        "time",
+        "costs"
+    ]
+    result = "";
+    attributes.forEach((attribute) => {
+        let sum = 0
+        cityData.forEach((city) => {
+            sum += city[`${attribute}Factor`]["average"];
+        });
+        const value = sum / cityData.length;
+        result += `${attribute} factor: ${parseFloat(value.toFixed(3))} <br />`;
+    });
+    $("#global-scores").html(result);
+}
+
 function cityCircleSize(city) {
     const score = city[attributeToCompare]["average"];
     switch (attributeToCompare) {
         case "timeFactor":
             return 3000 * Math.pow(score, 5);
         case "distanceFactor":
-            return 12000 * Math.pow(((score-1) * 5) + 1, 9);
+            return 12000 * Math.pow((score - 1) * 5 + 1, 9);
+        case "costsFactor":
+            return 100 * Math.pow((score) * 5, 5);
     }
     return 10000;
 }

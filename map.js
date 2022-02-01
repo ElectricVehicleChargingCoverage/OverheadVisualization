@@ -43,6 +43,7 @@ map.on("click", onMapClick);
 
 calculateRouteScores();
 calculateCityScores();
+calculateGlobalScores();
 
 const cityMinMax = analyzeAttribute(cityData, attributeToCompare);
 cityData.forEach((city) => {
@@ -59,6 +60,9 @@ cityData.forEach((city) => {
         `<h2>${city.name} (Score: ${score.toFixed(3)}) </h2>
         ${createCityInfoTable(city)} `,
         { maxWidth: "600", className: "city-popup" }
+    );
+    circle.bindTooltip(
+        `${city.name} (Score: ${score.toFixed(3)}) `,
     );
     circle.on("click", (e) => showRoutesFrom(city.name));
     circle.addTo(map);
