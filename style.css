@@ -54,7 +54,8 @@ form label {
 
 .global-scores {
     position: fixed;
-    bottom: 50px;
+    bottom: 20px;
+    left: 20px;
     padding: 10px;
     border-radius: 10px;
     max-width: 200px;
@@ -67,6 +68,15 @@ input[type="number"] {
     width: 94%;
     padding: 12px 20px;
     margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    padding: 4px 6px;
+    margin: 4px 0;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
