@@ -11,9 +11,13 @@ function toHHMMSS(secs) {
 }
 
 function analyzeAttribute(data, attribute) {
-    reducedData = data.map(function (item) {
-        return item[attribute]["average"];
-    });
+    reducedData = data
+        .map(function (item) {
+            return item[attribute]["average"];
+        })
+        .filter((value) => {
+            return !isNaN(value);
+        });
     return {
         min: Math.min.apply(null, reducedData),
         max: Math.max.apply(null, reducedData),
@@ -157,7 +161,9 @@ function createRouteInfoTable(route) {
             display: "Costs factor",
             method: (vehicle, route) => {
                 return route["costsFactor"][vehicle.name]
-                    ? `${parseFloat(route["costsFactor"][vehicle.name].toFixed(2))}`
+                    ? `${parseFloat(
+                          route["costsFactor"][vehicle.name].toFixed(2)
+                      )}`
                     : "-";
             },
         },
@@ -502,7 +508,7 @@ function calculateRouteScores() {
     const attributes = [
         { name: "strecke", new: "distance" },
         { name: "dauer", new: "time" },
-        { name: "costs", new: "costs"}
+        { name: "costs", new: "costs" },
     ];
     const routes = routeData;
     getCostsForRoutes();
@@ -535,18 +541,13 @@ function calculateRouteScores() {
 }
 
 function calculateGlobalScores() {
-    const attributes = [
-        "distance",
-        "time",
-        "costs"
-    ]
+    const attributes = ["distance", "time", "costs"];
     result = "";
     attributes.forEach((attribute) => {
-        let sum = 0
-        cityData.forEach((city) => {
-            sum += city[`${attribute}Factor`]["average"];
-        });
-        const value = sum / cityData.length;
+        const mapped = cityData
+            .map((city) => city[`${attribute}Factor`]["average"])
+            .filter((value) => !isNaN(value));
+        const value = mapped.reduce((a, b) => a + b, 0) / mapped.length;
         result += `${attribute} factor: ${parseFloat(value.toFixed(3))} <br />`;
     });
     $("#global-scores").html(result);
@@ -560,7 +561,7 @@ function cityCircleSize(city) {
         case "distanceFactor":
             return 12000 * Math.pow((score - 1) * 5 + 1, 9);
         case "costsFactor":
-            return 100 * Math.pow((score) * 5, 5);
+            return 100 * Math.pow(score * 5, 5);
     }
     return 10000;
 }

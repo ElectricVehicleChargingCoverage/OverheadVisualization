@@ -48,6 +48,7 @@ calculateGlobalScores();
 const cityMinMax = analyzeAttribute(cityData, attributeToCompare);
 cityData.forEach((city) => {
     const score = city[attributeToCompare]["average"];
+    if (!score) return;
     const radius = cityCircleSize(city);
     const color = getColor(cityMinMax, score);
     const circle = L.circle([city.lat, city.long], {
