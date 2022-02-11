@@ -434,7 +434,9 @@ function httpPostAsync(theUrl, body, callback, callbackInfo = null) {
 }
 
 function getPopupFromSummary(summary, vehicleInfo) {
-    var result = `<h2> ${vehicleInfo.name} </h2>
+    var result = `<h2> ${
+        vehicleInfo.name == "Verbrenner" ? "Combustion (as infinite EV)" : vehicleInfo.name
+    } </h2>
     <table> <tr> <th> Attribute </th> <th> Value </th> </tr>`;
     Object.keys(summary).forEach((key) => {
         const data = summary[key];

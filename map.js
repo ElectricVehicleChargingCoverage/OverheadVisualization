@@ -165,12 +165,22 @@ function displayRoute(latlngs, summary, vehicleInfo) {
         maxWidth: "600",
         className: "route-popup",
     });
-    polyline.bindTooltip(vehicleInfo.name);
+    polyline.bindTooltip(
+        vehicleInfo.name == "Verbrenner"
+            ? "Combustion (as infinite EV)"
+            : vehicleInfo.name
+    );
     const options = { opacity: 0.75 };
     switch (shortVehicleName(vehicleInfo.name)) {
         case "Combustion":
             options.color = "#0000ff";
             options.weight = 5;
+            options.opacity = 0.3;
+            polyline.addTo(combustionLayer);
+            break;
+        case "Verbrenner":
+            options.color = "#000000";
+            options.weight = 10;
             options.opacity = 0.3;
             polyline.addTo(combustionLayer);
             break;
